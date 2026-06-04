@@ -22,6 +22,11 @@ CREATE TABLE workspace_member (
 
 ALTER TABLE workspace_member ENABLE ROW LEVEL SECURITY;
 
+-- Ensures at most one team_lead per workspace; converts any TOCTOU race on
+-- workspace_has_no_members() into a serialization error rather than silent corruption.
+CREATE UNIQUE INDEX workspace_member_one_team_lead_per_workspace
+  ON workspace_member (workspace_id) WHERE role = 'team_lead';
+
 -- SECURITY DEFINER helpers: bypass RLS for inner membership checks used by team_lead
 -- policies, preventing self-referential recursion on workspace_member.
 -- SET search_path = public guards against search_path injection.
@@ -43,7 +48,7 @@ $$;
 -- Guards the team_lead INSERT policy: only allows self-insert into a workspace
 -- that has no existing members, preventing team_lead hijack via a known workspace UUID.
 CREATE OR REPLACE FUNCTION workspace_has_no_members(ws_id uuid)
-  RETURNS boolean LANGUAGE sql SECURITY DEFINER STABLE SET search_path = public AS
+  RETURNS boolean LANGUAGE sql SECURITY DEFINER VOLATILE SET search_path = public AS
 $$
   SELECT NOT EXISTS (SELECT 1 FROM workspace_member WHERE workspace_id = ws_id);
 $$;
@@ -75,7 +80,8 @@ CREATE POLICY "members can view own workspace_member row"
   ON workspace_member FOR SELECT TO authenticated
   USING (auth.uid() = user_id);
 
--- Team Lead can view all member rows in their workspace
+-- Team Lead can view all member rows in their workspace.
+-- Exposes user_id intentionally: team_lead needs it for S-02 member management.
 CREATE POLICY "team lead can view all workspace members"
   ON workspace_member FOR SELECT TO authenticated
   USING (auth_user_is_team_lead() AND workspace_id = auth_user_workspace_id());
