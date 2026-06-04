@@ -260,25 +260,25 @@ The helper functions `auth_user_workspace_id()`, `auth_user_is_team_lead()`, and
 
 #### Automated
 
-- [x] 1.1 Migration file exists at supabase/migrations/20260604000000_workspace_member_schema.sql
-- [x] 1.2 npx supabase db reset applies migration without errors
-- [x] 1.3 npm run build passes
+- [x] 1.1 Migration file exists at supabase/migrations/20260604000000_workspace_member_schema.sql — e3d981d
+- [x] 1.2 npx supabase db reset applies migration without errors — e3d981d
+- [x] 1.3 npm run build passes — e3d981d
 
 #### Manual
 
-- [x] 1.4 Both tables exist in Supabase with correct columns and constraints
-- [x] 1.5 RLS is enabled on both tables; all 6 policies are visible in Studio
-- [x] 1.6 Authenticated user can INSERT into workspace and workspace_member as team_lead; second INSERT with same user_id fails with UNIQUE violation
-- [x] 1.7 Anon SELECT on workspace returns 0 rows (RLS blocks unauthenticated access)
-- [x] 1.8 Member SELECT on workspace_member returns only own row (no peer rows visible)
-- [x] 1.9 Team Lead SELECT on workspace_member returns all rows in the workspace
+- [x] 1.4 Both tables exist in Supabase with correct columns and constraints — e3d981d
+- [x] 1.5 RLS is enabled on both tables; all 6 policies are visible in Studio — e3d981d
+- [x] 1.6 Authenticated user can INSERT into workspace and workspace_member as team_lead; second INSERT with same user_id fails with UNIQUE violation — e3d981d
+- [x] 1.7 Anon SELECT on workspace returns 0 rows (RLS blocks unauthenticated access) — e3d981d
+- [x] 1.8 Member SELECT on workspace_member returns only own row (no peer rows visible) — e3d981d
+- [x] 1.9 Team Lead SELECT on workspace_member returns all rows in the workspace — e3d981d
 
 ### Phase 2: TypeScript types in src/types.ts
 
 #### Automated
 
-- [ ] 2.1 npm run build passes
-- [ ] 2.2 npm run lint passes
+- [x] 2.1 npm run build passes
+- [x] 2.2 npm run lint passes
 
 #### Manual
 
