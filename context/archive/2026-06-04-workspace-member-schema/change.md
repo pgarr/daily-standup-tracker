@@ -1,10 +1,10 @@
 ---
 change_id: workspace-member-schema
 title: Add workspace and workspace_member tables with RLS
-status: impl_reviewed
+status: archived
 created: 2026-06-04
 updated: 2026-06-04
-archived_at: null
+archived_at: 2026-06-04T13:27:41Z
 ---
 
 ## Notes

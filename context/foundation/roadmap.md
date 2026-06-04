@@ -27,7 +27,7 @@ Developers and knowledge workers have no dedicated home for their daily standup 
 
 | ID   | Change ID                      | Outcome (user can …)                                                                           | Prerequisites          | PRD refs                            | Status   |
 |------|--------------------------------|------------------------------------------------------------------------------------------------|------------------------|-------------------------------------|----------|
-| F-01 | workspace-member-schema        | (foundation) workspace and workspace_member tables exist with RLS                             | —                      | NFR (data isolation), Access Control | ready    |
+| F-01 | workspace-member-schema        | (foundation) workspace and workspace_member tables exist with RLS                             | —                      | NFR (data isolation), Access Control | done     |
 | S-01 | auth-and-workspace             | register, log in/out, and create a workspace (becoming Team Lead)                              | F-01                   | FR-001, FR-002, FR-003              | proposed |
 | S-02 | member-invite-and-join         | Team Lead invites a member by email; invited user joins the workspace as a Member              | S-01                   | FR-004, FR-005                      | proposed |
 | S-03 | standup-submission-and-history | submit a standup, view their history list, and see their streak                                | S-01                   | FR-006, FR-009, FR-011, US-01       | proposed |
@@ -68,7 +68,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** RLS policies on workspace tables are the first and most critical access control contract; a gap here violates the absolute data isolation NFR silently — getting them right in this foundation prevents per-slice policy patches later
-- **Status:** ready
+- **Status:** done
 
 ## Slices
 
@@ -169,3 +169,5 @@ Non-blocking implementation questions (do not block planning; surface at `/10x-p
 ## Done
 
 (Empty on first generation. `/10x-archive` appends an entry here — and flips that item's `Status` to `done` — when a change whose `Change ID` matches the item is archived.)
+
+- **F-01: (foundation) workspace and workspace_member tables exist with RLS** — Archived 2026-06-04 → `context/archive/2026-06-04-workspace-member-schema/`. Lesson: —.
