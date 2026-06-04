@@ -15,3 +15,10 @@
 - **Problem**: `workspace_has_no_members` was declared STABLE. STABLE allows PostgreSQL to cache the function's result per-argument within a single statement. For single-row INSERTs this is harmless, but for multi-row INSERTs sharing the same workspace_id PostgreSQL can call the function once, cache "no members", and allow all rows through — bypassing the intended "empty workspace only" guard.
 - **Rule**: SECURITY DEFINER functions used as RLS guard conditions that check live row state (e.g., "does this workspace have members?") must be declared VOLATILE, not STABLE. STABLE is appropriate only for functions that read a value tied to the calling user's session (e.g., auth_user_workspace_id, auth_user_is_team_lead), where stale results within a statement are semantically safe.
 - **Applies to**: plan, plan-review, implement, impl-review
+
+## Close the linked GitHub issue on impl-review completion
+
+- **Context**: Any phase touching a tracked roadmap item with a linked GitHub issue.
+- **Problem**: Issue stays Open after work is merged — gives a misleading picture of project state in the tracker.
+- **Rule**: Close the linked GitHub issue when a change's impl-review is complete and work is merged. Update the issue's Status field before closing.
+- **Applies to**: implement, impl-review
