@@ -277,9 +277,9 @@ The helper functions `auth_user_workspace_id()`, `auth_user_is_team_lead()`, and
 
 #### Automated
 
-- [x] 2.1 npm run build passes
-- [x] 2.2 npm run lint passes
+- [x] 2.1 npm run build passes — 1394a5f
+- [x] 2.2 npm run lint passes — 1394a5f
 
 #### Manual
 
-- [ ] 2.3 Types in src/types.ts match migration columns exactly
+- [x] 2.3 Types in src/types.ts match migration columns exactly — 1394a5f
