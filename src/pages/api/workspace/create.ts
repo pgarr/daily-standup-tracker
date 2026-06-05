@@ -8,8 +8,13 @@ const schema = z.object({
 
 export const POST: APIRoute = async (context) => {
   const user = context.locals.user;
+  // /api/workspace/* is not covered by AUTH_REQUIRED_ROUTES
+  // (middleware matches /workspace, not /api) — this guard is required.
   if (!user) {
     return context.redirect("/auth/signin");
+  }
+  if (context.locals.workspaceMember) {
+    return context.redirect("/dashboard");
   }
 
   const supabase = createClient(context.request.headers, context.cookies);
