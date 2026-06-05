@@ -3,15 +3,18 @@ import { createClient } from "@/lib/supabase";
 import type { Workspace, WorkspaceMember } from "@/types";
 
 const AUTH_REQUIRED_ROUTES = ["/dashboard", "/workspace"];
+// Never add "/workspace" here — /workspace/setup is the redirect target for
+// no-workspace users and would create an infinite redirect loop.
 const WORKSPACE_REQUIRED_ROUTES = ["/dashboard"];
+const WORKSPACE_SETUP_REDIRECT = "/workspace/setup";
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const client = createClient(context.request.headers, context.cookies);
+  const supabase = createClient(context.request.headers, context.cookies);
 
-  if (client) {
+  if (supabase) {
     const {
       data: { user },
-    } = await client.auth.getUser();
+    } = await supabase.auth.getUser();
     context.locals.user = user ?? null;
   } else {
     context.locals.user = null;
@@ -20,14 +23,16 @@ export const onRequest = defineMiddleware(async (context, next) => {
   context.locals.workspace = null;
   context.locals.workspaceMember = null;
 
-  if (client && context.locals.user) {
+  if (supabase && context.locals.user) {
     type MemberRow = WorkspaceMember & { workspace: Workspace | null };
-    const memberResult = await client
+    const memberResult = await supabase
       .from("workspace_member")
       .select("*, workspace:workspace_id(*)")
       .eq("user_id", context.locals.user.id)
       .limit(1)
       .maybeSingle();
+    if (memberResult.error) console.error("[middleware] workspace query failed:", memberResult.error);
+    // No generated Supabase types for this table; remove cast after npx supabase gen types typescript
     const member = memberResult.data as unknown as MemberRow | null;
 
     if (member) {
@@ -41,7 +46,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   if (WORKSPACE_REQUIRED_ROUTES.some((r) => pathname.startsWith(r))) {
     if (!context.locals.user) return context.redirect("/auth/signin");
-    if (!context.locals.workspace) return context.redirect("/workspace/setup");
+    if (!context.locals.workspace) return context.redirect(WORKSPACE_SETUP_REDIRECT);
   } else if (AUTH_REQUIRED_ROUTES.some((r) => pathname.startsWith(r))) {
     if (!context.locals.user) return context.redirect("/auth/signin");
   }

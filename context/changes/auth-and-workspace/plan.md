@@ -259,33 +259,33 @@ No new Supabase migrations in this slice. All schema changes (workspace, workspa
 
 #### Automated
 
-- [x] 1.1 npm run build passes with no TypeScript errors
-- [x] 1.2 npm run lint passes
+- [x] 1.1 npm run build passes with no TypeScript errors — 1ee08ac
+- [x] 1.2 npm run lint passes — 1ee08ac
 
 #### Manual
 
-- [x] 1.3 Unauthenticated request to /dashboard redirects to /auth/signin
-- [x] 1.4 Unauthenticated request to /workspace/setup redirects to /auth/signin
-- [x] 1.5 Authenticated user with no workspace hitting /dashboard redirects to /workspace/setup
-- [x] 1.6 Authenticated user with a workspace can access /dashboard without redirect
+- [x] 1.3 Unauthenticated request to /dashboard redirects to /auth/signin — 1ee08ac
+- [x] 1.4 Unauthenticated request to /workspace/setup redirects to /auth/signin — 1ee08ac
+- [x] 1.5 Authenticated user with no workspace hitting /dashboard redirects to /workspace/setup — 1ee08ac
+- [x] 1.6 Authenticated user with a workspace can access /dashboard without redirect — 1ee08ac
 
 ### Phase 2: Workspace setup page and API route
 
 #### Automated
 
-- [ ] 2.1 npm run build passes
-- [ ] 2.2 npm run lint passes
+- [x] 2.1 npm run build passes
+- [x] 2.2 npm run lint passes
 
 #### Manual
 
-- [ ] 2.3 Signing in with no workspace redirects to /workspace/setup
-- [ ] 2.4 Signing in with existing workspace redirects to /dashboard
-- [ ] 2.5 /workspace/setup page renders the workspace name form
-- [ ] 2.6 Submitting empty name shows inline validation error
-- [ ] 2.7 Submitting valid name creates workspace and workspace_member rows in Supabase Studio
-- [ ] 2.8 workspace_member.role is team_lead for the new row
-- [ ] 2.9 After creation user lands on /dashboard
-- [ ] 2.10 Navigating to /workspace/setup after workspace exists redirects to /dashboard
+- [x] 2.3 Signing in with no workspace redirects to /workspace/setup
+- [x] 2.4 Signing in with existing workspace redirects to /dashboard
+- [x] 2.5 /workspace/setup page renders the workspace name form
+- [x] 2.6 Submitting empty name shows inline validation error
+- [x] 2.7 Submitting valid name creates workspace and workspace_member rows in Supabase Studio
+- [x] 2.8 workspace_member.role is team_lead for the new row
+- [x] 2.9 After creation user lands on /dashboard
+- [x] 2.10 Navigating to /workspace/setup after workspace exists redirects to /dashboard
 
 ### Phase 3: Dashboard update and signup.ts Zod validation
 
