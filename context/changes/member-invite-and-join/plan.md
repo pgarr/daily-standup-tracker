@@ -392,17 +392,18 @@ Builds the invitee-facing side: the `/auth/accept-invite` page that handles all 
 
 **File**: `src/pages/api/workspace/accept-invite.ts`
 
-**Intent**: Authenticated endpoint that validates the token against the calling user's email, inserts the user into `workspace_member`, and marks the invite as accepted. Non-atomic — compensates by attempting a cleanup DELETE on `workspace_member` if the UPDATE fails.
+**Intent**: Authenticated endpoint that validates the token and atomically joins the user to the workspace via the `accept_invitation` SECURITY DEFINER function (added in migration 20260605000001). The function handles locking, INSERT into `workspace_member`, and marking the invite accepted in one transaction.
 
 **Contract**: Exports `POST`.
 - Guard: `context.locals.user` required; redirect to `/auth/signin` otherwise.
-- Existing workspace check: API routes skip middleware workspace loading — query `supabase.from("workspace_member").select("id").eq("user_id", user.id).maybeSingle()`. If non-null (user already in a workspace), redirect to `/auth/accept-invite?token=${token}&error=already_in_workspace`.
 - Zod: `z.object({ token: z.string().min(1) })` on FormData.
-- Look up invite: `supabase.rpc('get_invitation_by_token', { p_token: token }).maybeSingle()`. If null: redirect `/auth/accept-invite?token=${token}&error=invite_invalid`.
-- Email check: `invite.email !== context.locals.user.email` → redirect `/auth/accept-invite?token=${token}&error=email_mismatch`.
-- INSERT into `workspace_member`: `{ workspace_id: invite.workspace_id, user_id: user.id, role: 'member' }`. RLS (`has_valid_invitation`) gates this insert. On error: redirect `/auth/accept-invite?token=${token}&error=${encodeURIComponent(error.message)}`.
-- UPDATE `workspace_invitation` SET `accepted_at = new Date().toISOString()` WHERE `token = token`. On error: compensating DELETE on workspace_member row (best-effort; log on failure). Redirect `/auth/accept-invite?token=${token}&error=accept_failed`.
+- Call `supabase.rpc('accept_invitation', { p_token: token })`. Map exceptions:
+  - `'invalid or expired invitation'` → redirect `/auth/accept-invite?token=${token}&error=invite_invalid`
+  - `'already a member of a workspace'` → redirect `/auth/accept-invite?token=${token}&error=already_in_workspace`
+  - any other error → redirect `/auth/accept-invite?token=${token}&error=${encodeURIComponent(error.message)}`
 - Success: redirect `/dashboard`.
+
+> **Design note (impl-review fix)**: the original two-statement approach (INSERT + UPDATE with compensating DELETE) was replaced by the `accept_invitation()` SECURITY DEFINER function to: (a) prevent column-mutation attacks via the old RLS UPDATE policy, (b) serialize concurrent accepts with FOR UPDATE row-locking, and (c) make the operation fully atomic. The "invited user can accept invitation" RLS UPDATE policy was dropped in migration 20260605000001.
 
 #### 4. Update signup.ts for invite flow
 
@@ -541,9 +542,9 @@ Second migration for this project: `supabase/migrations/20260605000000_workspace
 
 #### Automated
 
-- [x] 1.1 npx supabase db reset applies migration without errors
-- [x] 1.2 npm run build passes
-- [x] 1.3 npm run lint passes
+- [x] 1.1 npx supabase db reset applies migration without errors — c3b628b
+- [x] 1.2 npm run build passes — c3b628b
+- [x] 1.3 npm run lint passes — c3b628b
 
 #### Manual
 
@@ -557,8 +558,8 @@ Second migration for this project: `supabase/migrations/20260605000000_workspace
 
 #### Automated
 
-- [ ] 2.1 npm run build passes
-- [ ] 2.2 npm run lint passes
+- [x] 2.1 npm run build passes
+- [x] 2.2 npm run lint passes
 
 #### Manual
 

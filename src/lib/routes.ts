@@ -4,5 +4,5 @@
 export const AUTH_REQUIRED_ROUTES = ["/dashboard", "/workspace"];
 // Never add "/workspace/setup" to this list — it is the redirect target for
 // no-workspace users and would create an infinite redirect loop.
-export const WORKSPACE_REQUIRED_ROUTES = ["/dashboard"];
+export const WORKSPACE_REQUIRED_ROUTES = ["/dashboard", "/workspace/members"];
 export const WORKSPACE_SETUP_REDIRECT = "/workspace/setup";

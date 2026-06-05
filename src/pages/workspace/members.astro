@@ -1,0 +1,172 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { createClient } from "@/lib/supabase";
+import InviteForm from "@/components/workspace/InviteForm";
+import type { WorkspaceInvitation } from "@/types";
+
+const { user, workspace, workspaceMember } = Astro.locals;
+
+if (workspaceMember?.role !== "team_lead") {
+  return Astro.redirect("/dashboard");
+}
+// workspace is guaranteed non-null at this point (middleware enforces WORKSPACE_REQUIRED_ROUTES)
+if (!workspace) {
+  return Astro.redirect("/dashboard");
+}
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+if (!supabase) {
+  return Astro.redirect(`/workspace/members?error=${encodeURIComponent("Supabase is not configured")}`);
+}
+
+const [acceptedResult, openResult] = await Promise.all([
+  supabase
+    .from("workspace_invitation")
+    .select("*")
+    .eq("workspace_id", workspace.id)
+    .not("accepted_at", "is", null)
+    .order("accepted_at", { ascending: false }),
+  supabase
+    .from("workspace_invitation")
+    .select("*")
+    .eq("workspace_id", workspace.id)
+    .is("accepted_at", null)
+    .order("created_at", { ascending: false }),
+]);
+
+const acceptedInvitations = (acceptedResult.data ?? []) as WorkspaceInvitation[];
+const openInvitations = (openResult.data ?? []) as WorkspaceInvitation[];
+const now = new Date();
+
+const success = Astro.url.searchParams.get("success");
+const error = Astro.url.searchParams.get("error");
+const emailWarning = Astro.url.searchParams.get("email_warning");
+---
+
+<Layout title="Members">
+  <div class="bg-cosmic min-h-screen p-4 md:p-8">
+    <div class="mx-auto max-w-2xl space-y-6">
+      <!-- Header -->
+      <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl">
+        <h1 class="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-2xl font-bold text-transparent">
+          {workspace.name}
+        </h1>
+        <p class="mt-1 text-sm text-blue-100/60">Manage your workspace members</p>
+      </div>
+
+      <!-- Status feedback -->
+      {
+        success === "invite_sent" && (
+          <div class="rounded-xl border border-green-500/30 bg-green-900/30 px-4 py-3 text-sm text-green-300">
+            Invite sent successfully.
+          </div>
+        )
+      }
+      {
+        success === "invite_created" && emailWarning === "1" && (
+          <div class="rounded-xl border border-yellow-500/30 bg-yellow-900/30 px-4 py-3 text-sm text-yellow-300">
+            Invite created but email delivery failed — copy the link from the server console or ask the invitee to
+            request a re-invite.
+          </div>
+        )
+      }
+      {
+        success === "invite_cancelled" && (
+          <div class="rounded-xl border border-green-500/30 bg-green-900/30 px-4 py-3 text-sm text-green-300">
+            Invite cancelled.
+          </div>
+        )
+      }
+      {
+        error && (
+          <div class="rounded-xl border border-red-500/30 bg-red-900/30 px-4 py-3 text-sm text-red-300">
+            {decodeURIComponent(error)}
+          </div>
+        )
+      }
+
+      <!-- Team Lead section -->
+      <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl">
+        <h2 class="mb-4 text-sm font-semibold tracking-wider text-blue-100/60 uppercase">Team Lead</h2>
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-white">{user?.email}</span>
+          <span
+            class="rounded-full border border-purple-400/40 bg-purple-500/20 px-3 py-1 text-xs font-medium text-purple-200"
+          >
+            Team Lead
+          </span>
+        </div>
+      </div>
+
+      <!-- Members section -->
+      <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl">
+        <h2 class="mb-4 text-sm font-semibold tracking-wider text-blue-100/60 uppercase">
+          Members ({acceptedInvitations.length})
+        </h2>
+        {
+          acceptedInvitations.length === 0 ? (
+            <p class="text-sm text-blue-100/40">No members yet. Send an invite below.</p>
+          ) : (
+            <ul class="space-y-3">
+              {acceptedInvitations.map((inv) => (
+                <li class="flex items-center justify-between">
+                  <span class="text-sm text-white">{inv.email}</span>
+                  <span class="rounded-full border border-blue-400/40 bg-blue-500/20 px-3 py-1 text-xs font-medium text-blue-200">
+                    Member
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+
+      <!-- Pending / Expired Invites section -->
+      {
+        openInvitations.length > 0 && (
+          <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl">
+            <h2 class="mb-4 text-sm font-semibold tracking-wider text-blue-100/60 uppercase">
+              Invites ({openInvitations.length})
+            </h2>
+            <ul class="space-y-3">
+              {openInvitations.map((inv) => {
+                const isPending = new Date(inv.expires_at) > now;
+                return (
+                  <li class="flex items-center justify-between gap-4">
+                    <span class="min-w-0 flex-1 truncate text-sm text-white">{inv.email}</span>
+                    <div class="flex shrink-0 items-center gap-2">
+                      <span
+                        class:list={`rounded-full px-3 py-1 text-xs font-medium ${
+                          isPending
+                            ? "border border-yellow-400/40 bg-yellow-500/20 text-yellow-200"
+                            : "border border-white/20 bg-white/10 text-white/50"
+                        }`}
+                      >
+                        {isPending ? "Pending" : "Expired"}
+                      </span>
+                      <form method="POST" action="/api/workspace/invite-cancel">
+                        <input type="hidden" name="id" value={inv.id} />
+                        <button
+                          type="submit"
+                          class="rounded-lg border border-white/20 bg-white/5 px-3 py-1 text-xs text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                        >
+                          Cancel
+                        </button>
+                      </form>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )
+      }
+
+      <!-- Invite form -->
+      <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl">
+        <h2 class="mb-4 text-sm font-semibold tracking-wider text-blue-100/60 uppercase">Send Invite</h2>
+        <InviteForm client:load />
+      </div>
+    </div>
+  </div>
+</Layout>
