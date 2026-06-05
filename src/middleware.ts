@@ -1,12 +1,7 @@
 import { defineMiddleware } from "astro:middleware";
 import { createClient } from "@/lib/supabase";
+import { AUTH_REQUIRED_ROUTES, WORKSPACE_REQUIRED_ROUTES, WORKSPACE_SETUP_REDIRECT } from "@/lib/routes";
 import type { Workspace, WorkspaceMember } from "@/types";
-
-const AUTH_REQUIRED_ROUTES = ["/dashboard", "/workspace"];
-// Never add "/workspace" here — /workspace/setup is the redirect target for
-// no-workspace users and would create an infinite redirect loop.
-const WORKSPACE_REQUIRED_ROUTES = ["/dashboard"];
-const WORKSPACE_SETUP_REDIRECT = "/workspace/setup";
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const supabase = createClient(context.request.headers, context.cookies);
