@@ -3,7 +3,7 @@ import { readdirSync } from "fs";
 import { resolve, relative, join } from "path";
 import { AUTH_REQUIRED_ROUTES, WORKSPACE_REQUIRED_ROUTES } from "@/lib/routes";
 
-const PAGES_DIR = resolve(process.cwd(), "src/pages");
+const PAGES_DIR = resolve(__dirname, "../pages");
 
 // Every route not covered by a protection prefix must appear here.
 // - To protect a new route area: add its prefix to AUTH_REQUIRED_ROUTES in src/lib/routes.ts.
@@ -30,6 +30,8 @@ function collectPageFiles(dir: string): string[] {
     if (entry.isDirectory()) {
       files.push(...collectPageFiles(fullPath));
     } else if (entry.name.endsWith(".astro") || entry.name.endsWith(".ts")) {
+      // All .ts files are treated as routes. Co-located helpers must use the
+      // _ prefix (e.g., _utils.ts) or they will surface as ungated routes here.
       files.push(fullPath);
     }
   }
@@ -42,7 +44,9 @@ function deriveUrlPath(filePath: string): string {
   const withoutExt = rel.replace(/\.(astro|ts)$/, "");
   // Strip trailing /index or bare index
   const withoutIndex = withoutExt.replace(/\/index$|^index$/, "");
-  return "/" + withoutIndex;
+  // Strip dynamic segments — /blog/[slug] → /blog; preserves static prefix for protection check
+  const normalized = withoutIndex.replace(/\/\[[^\]]+\].*$/, "");
+  return "/" + (normalized || withoutIndex);
 }
 
 describe("Route coverage", () => {

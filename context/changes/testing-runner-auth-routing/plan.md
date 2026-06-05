@@ -330,12 +330,12 @@ Rule: no Vitest test may import a module that transitively depends on `astro:env
 
 #### Automated
 
-- [x] 1.1 `npm test` exits 0 (smoke + route-coverage pass)
-- [x] 1.2 `npm run lint` passes with new files in place
+- [x] 1.1 `npm test` exits 0 (smoke + route-coverage pass) — 6e2e5a9
+- [x] 1.2 `npm run lint` passes with new files in place — 6e2e5a9
 
 #### Manual
 
-- [x] 1.3 Add `src/pages/team.astro`, run `npm test`, confirm failure names `/team`; delete file, confirm pass
+- [x] 1.3 Add `src/pages/team.astro`, run `npm test`, confirm failure names `/team`; delete file, confirm pass — 6e2e5a9
 
 ---
 
