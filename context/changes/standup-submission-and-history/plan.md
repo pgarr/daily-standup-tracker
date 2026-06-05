@@ -32,7 +32,7 @@ A logged-in member lands on `/dashboard`, sees their streak badge and a standup 
 - No full-text search — FR-010 deferred to v2; date-ordered history is sufficient for v1.
 - No Team Lead visibility of members' entries — SELECT policy for team leads is S-05 scope.
 - No streak milestone messaging beyond "Day N" — the habit mechanic is the badge itself.
-- No server-side local timezone resolution — the client sends the local date in the POST (via `new Date().toLocaleDateString("sv")`); the dashboard load uses the UTC date for the "today check" (acceptable approximation; mismatch only for users in extreme timezone offsets near midnight).
+- No server-side local timezone resolution — the client sends the local date in the POST (via `new Date().toLocaleDateString("sv")`); the dashboard load uses the UTC date for the "today check" (acceptable approximation; mismatch only for users in extreme timezone offsets near midnight). A side effect: an authenticated user can POST any valid YYYY-MM-DD string as `submitted_date`. The UNIQUE constraint prevents double-posting the same date, but not deliberate backfilling. Accepted at MVP scope (personal productivity tool; streak integrity is user-trust-dependent). If leaderboards or public streaks ship, revisit.
 
 ## Implementation Approach
 
@@ -395,16 +395,16 @@ S-05 will add a Team Lead SELECT policy on `standup_entries` (to make all member
 
 #### Automated
 
-- [x] 2.1 npm test exits 0 (all 7 streak unit tests pass)
-- [x] 2.2 npm run build passes
-- [x] 2.3 npm run lint passes
+- [x] 2.1 npm test exits 0 (all 7 streak unit tests pass) — 12f9d1c
+- [x] 2.2 npm run build passes — 12f9d1c
+- [x] 2.3 npm run lint passes — 12f9d1c
 
 #### Manual
 
-- [x] 2.4 POST to /api/standup/submit with valid fields creates a row in Supabase Studio
-- [x] 2.5 POST with duplicate submitted_date redirects to /dashboard?error=You%20already%20submitted%20a%20standup%20today.
-- [x] 2.6 POST without did or plan redirects with a validation error
-- [x] 2.7 POST without auth session redirects to /auth/signin
+- [x] 2.4 POST to /api/standup/submit with valid fields creates a row in Supabase Studio — 12f9d1c
+- [x] 2.5 POST with duplicate submitted_date redirects to /dashboard?error=You%20already%20submitted%20a%20standup%20today. — 12f9d1c
+- [x] 2.6 POST without did or plan redirects with a validation error — 12f9d1c
+- [x] 2.7 POST without auth session redirects to /auth/signin — 12f9d1c
 
 ### Phase 3: Dashboard UI
 

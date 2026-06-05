@@ -15,7 +15,10 @@ CREATE TABLE workspace_invitation (
 
 ALTER TABLE workspace_invitation ENABLE ROW LEVEL SECURITY;
 
--- SECURITY DEFINER helpers --
+-- SECURITY DEFINER helpers: get_invitation_by_token bypasses RLS to serve the
+-- pre-auth accept-invite page (no session yet). has_valid_invitation bypasses RLS
+-- to avoid self-referential recursion when used inside workspace_member RLS policies.
+-- SET search_path = public guards against search_path injection in both functions.
 
 -- Returns limited invite info by token; used by the pre-auth accept-invite page.
 -- STABLE: read-only query; safe to cache within a transaction.

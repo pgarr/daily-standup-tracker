@@ -16,6 +16,20 @@
 - **Rule**: SECURITY DEFINER functions used as RLS guard conditions that check live row state (e.g., "does this workspace have members?") must be declared VOLATILE, not STABLE. STABLE is appropriate only for functions that read a value tied to the calling user's session (e.g., auth_user_workspace_id, auth_user_is_team_lead), where stale results within a statement are semantically safe.
 - **Applies to**: plan, plan-review, implement, impl-review
 
+## Multi-step DB operations that must be atomic belong in a SECURITY DEFINER function
+
+- **Context**: member-invite-and-join accept flow — two-statement accept (INSERT workspace_member, then UPDATE workspace_invitation.accepted_at) with compensating DELETE.
+- **Problem**: Between the two statements the invite still appears pending, concurrent accepts can both pass has_valid_invitation() and race to insert, and if the second statement never executes the member row exists with no closed invite. The compensating DELETE is best-effort and cannot guarantee consistency.
+- **Rule**: When two or more DB writes must succeed or fail together (e.g., claim a resource and mark it consumed), wrap them in a single SECURITY DEFINER function using FOR UPDATE row-locking and plpgsql transactions. Do not rely on application-layer compensation (DELETE on failure) as the primary consistency mechanism.
+- **Applies to**: plan, plan-review, implement, impl-review
+
+## A UNIQUE constraint on (col_a, col_b) covers prefix queries on col_a alone
+
+- **Context**: workspace_invitation table — UNIQUE (workspace_id, email) raised a question about whether a separate workspace_id index was needed.
+- **Problem**: It is easy to assume that a composite UNIQUE constraint only helps equality queries on both columns together, leading to unnecessary extra indexes.
+- **Rule**: PostgreSQL B-tree indexes (including those backing UNIQUE constraints) support prefix lookups. A UNIQUE index on (a, b) efficiently serves WHERE a = ? queries in addition to WHERE a = ? AND b = ? queries. Before adding a standalone index on a leading composite column, verify one does not already exist via a UNIQUE or other composite constraint.
+- **Applies to**: plan, plan-review, implement, impl-review
+
 ## Close the linked GitHub issue on impl-review completion
 
 - **Context**: Any phase touching a tracked roadmap item with a linked GitHub issue.

@@ -1,3 +1,5 @@
+export const prerender = false;
+
 import type { APIRoute } from "astro";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase";
@@ -20,12 +22,12 @@ export const POST: APIRoute = async (context) => {
   // API routes skip middleware workspace loading — load it here.
   const { data: memberData } = await supabase
     .from("workspace_member")
-    .select("id, role")
+    .select("id, role, workspace_id")
     .eq("user_id", user.id)
     .maybeSingle();
 
   if (memberData?.role !== "team_lead") {
-    return context.redirect("/auth/signin");
+    return context.redirect("/dashboard");
   }
 
   const form = await context.request.formData();
@@ -36,7 +38,11 @@ export const POST: APIRoute = async (context) => {
   }
 
   const { id } = result.data;
-  const { error, count } = await supabase.from("workspace_invitation").delete({ count: "exact" }).eq("id", id);
+  const { error, count } = await supabase
+    .from("workspace_invitation")
+    .delete({ count: "exact" })
+    .eq("id", id)
+    .eq("workspace_id", memberData.workspace_id);
 
   if (error) {
     return context.redirect(`/workspace/members?error=${encodeURIComponent(error.message)}`);

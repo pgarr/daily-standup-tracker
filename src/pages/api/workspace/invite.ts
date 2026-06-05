@@ -1,3 +1,5 @@
+export const prerender = false;
+
 import type { APIRoute } from "astro";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase";
@@ -29,7 +31,7 @@ export const POST: APIRoute = async (context) => {
   const memberRow = memberResult.data as unknown as MemberRowWithWorkspace | null;
 
   if (memberRow?.role !== "team_lead") {
-    return context.redirect("/auth/signin");
+    return context.redirect("/dashboard");
   }
 
   const workspace = memberRow.workspace;
@@ -46,6 +48,7 @@ export const POST: APIRoute = async (context) => {
 
   const { email } = result.data;
   const token = crypto.randomUUID();
+  const inviteLink = `${context.url.origin}/auth/accept-invite?token=${token}`;
 
   const { error: insertError } = await supabase
     .from("workspace_invitation")
@@ -55,8 +58,6 @@ export const POST: APIRoute = async (context) => {
     const message = insertError.code === "23505" ? "An invite for this email is already pending" : insertError.message;
     return context.redirect(`/workspace/members?error=${encodeURIComponent(message)}`);
   }
-
-  const inviteLink = `${context.url.origin}/auth/accept-invite?token=${token}`;
   const { error: emailError } = await sendInviteEmail(email, inviteLink, workspace.name);
 
   if (emailError) {

@@ -558,8 +558,8 @@ Second migration for this project: `supabase/migrations/20260605000000_workspace
 
 #### Automated
 
-- [x] 2.1 npm run build passes
-- [x] 2.2 npm run lint passes
+- [x] 2.1 npm run build passes — e9cc8d9
+- [x] 2.2 npm run lint passes — e9cc8d9
 
 #### Manual
 

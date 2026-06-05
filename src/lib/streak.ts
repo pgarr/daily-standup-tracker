@@ -1,3 +1,4 @@
+// Precondition: entries must be sorted descending by submitted_date (newest first).
 export function calculateStreak(entries: readonly { submitted_date: string }[]): number {
   if (entries.length === 0) return 0;
   let count = 1;

@@ -6,6 +6,9 @@ const schema = z.object({
   did: z.string().min(1, "What you did is required"),
   plan: z.string().min(1, "Plan for today is required"),
   blockers: z.string().optional().nullable(),
+  // submitted_date is the user's local business date, sent from the client via
+  // new Date().toLocaleDateString("sv"). Server-side clamping is deliberately omitted
+  // (see plan §What We're NOT Doing); streak integrity relies on user trust at MVP scope.
   submitted_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
 });
 
@@ -34,12 +37,15 @@ export const POST: APIRoute = async (context) => {
   }
 
   // Middleware skips workspace loading for /api/* routes — must query workspace_member directly.
-  const { data: member } = await supabase
+  const { data: member, error: memberError } = await supabase
     .from("workspace_member")
     .select("workspace_id")
     .eq("user_id", user.id)
     .maybeSingle();
 
+  if (memberError) {
+    return context.redirect(`/dashboard?error=${encodeURIComponent("Failed to load workspace")}`);
+  }
   if (!member) {
     return context.redirect("/workspace/setup");
   }
