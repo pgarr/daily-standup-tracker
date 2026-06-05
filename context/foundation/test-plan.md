@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-06-05 (Phase 1 change opened)
+> Last updated: 2026-06-05 (updated §2 risks + §3 phases for PRD v3 + Roadmap v2)
 
 ---
 
@@ -44,22 +44,24 @@ research's job; see §1 principle #3).
 | # | Risk (failure scenario) | Impact | Likelihood | Source (evidence — not anchor) |
 |---|---|---|---|---|
 | 1 | Unauthenticated user reaches a protected route — middleware regression or new route added without updating the gate | High | High | Interview Q1 (top fear); interview Q2 (past burn: new route not added to gate); hot-spot `src/pages/api` dir (7 commits/30d); hot-spot `src/middleware.ts` file (4 commits/30d — single-file peak) |
-| 2 | Member reads another member's standup entries — RLS policy gap on the standup_entries table (S-03) | High | Medium | PRD NFR "horizontal data isolation is absolute"; interview Q3 (low confidence in RLS policies); F-01 archive plan (SECURITY DEFINER workaround complexity on workspace_member) |
+| 2 | Member reads or mutates (edits/deletes) another member's standup entry — RLS gap on standup_entries fails to reject write operations by Member A on Member B's rows (S-03, S-06) | High | Medium | PRD NFR "horizontal data isolation is absolute"; PRD v3 FR-007/FR-008 reinstated as must-have (write-path routes now exist); interview Q3 (low confidence in RLS policies); F-01 archive plan (SECURITY DEFINER workaround complexity on workspace_member) |
 | 3 | Member accesses Team Lead-only team feed — app-layer role gate missing or incorrect (S-05) | High | Medium | PRD Access Control "Members cannot see other members' entries"; roadmap S-05 risk note "first slice where Team Lead role gating is exercised end-to-end"; interview Q2 (past burn: route without gate) |
-| 4 | Blocker alert misfires — fires for non-consecutive days, wrong threshold, or silently misses a genuine repeated blocker (S-04) | High | Medium | PRD FR-012 (similarity mechanism unresolved; an Open Question in v1); roadmap S-04 risk note "if it fires too eagerly or too rarely, user trust breaks before the north star is demonstrated" |
-| 5 | Streak shows wrong count — Fri→Mon business-day boundary or timezone edge case produces incorrect increment or reset (S-03) | Medium | Medium | PRD FR-011; roadmap S-03 unknowns (UTC vs. local timezone; business-day definition explicitly unresolved at design time) |
+| 4 | Blocker alert misfires — fires without member confirmation, fires on non-consecutive business days, fires on wrong threshold, or confirmation event is silently lost leaving alert state inconsistent (S-04) | High | Medium | PRD v3 FR-012 (alert fires ONLY on member confirmation — confirmation is the canonical false-positive guard; resolved open question); roadmap S-04 risk note "if it fires too eagerly or too rarely, user trust breaks before the north star is demonstrated" |
+| 5 | Streak shows wrong count — Fri→Mon business-day boundary or timezone edge case produces incorrect increment or reset (S-03) | Medium | Medium | PRD v3 FR-011 (resolved: Mon–Fri business days; weekend gaps do not break streak); roadmap S-03 open implementation question: UTC vs. user local timezone for streak evaluation |
 | 6 | Invite token reused or accepted by wrong user — unauthorized member joins workspace (S-02) | Medium | Medium | Abuse lens (auth surface; invite link acceptance); roadmap S-02 risk "invite acceptance merges with registration — orphaned records or duplicate accounts"; F-01 plan (`workspace_has_no_members` guard protects team_lead INSERT) |
+| 7 | Edit/delete of a standup entry creates inconsistent derived state — streak recalculates incorrectly, or a confirmed blocker alert becomes orphaned/stale after its source entry is deleted (S-06) | Medium | Medium | Roadmap S-06 risk note "interaction between entry mutation and derived state (streak, confirmed blocker alerts from S-04) should be scoped explicitly"; PRD v3 FR-007/FR-008 reinstated as must-have |
 
 ### Risk Response Guidance
 
 | Risk | What would prove protection | Must challenge | Context `/10x-research` must ground | Likely cheapest layer | Anti-pattern to avoid |
 |---|---|---|---|---|---|
 | #1 | Every request without a valid session to a protected route receives a 302 redirect to `/auth/signin`, not the page content; a new route added under `src/pages/` is also gated if it should be | "The gate is enforced because I can read it in the code" — reading code is not a signal | How the route protection list is maintained; how the middleware resolves the user; what happens when `createClient()` returns null | Integration: send unauthenticated HTTP request, assert redirect location | Static list mirror — testing only the hardcoded route list misses new routes added after this phase |
-| #2 | A SELECT executed as Member A (real JWT) on standup_entries returns 0 rows of Member B, even when the workspace_id is known | "RLS is enabled on the table" — enabled ≠ correct policies | standup_entries table schema and RLS policies (S-03 must ship first); whether any API route uses the service-role key (which bypasses RLS) | Integration against local Supabase; real JWT per role | Service-role key in tests — bypasses RLS and produces false-green results |
+| #2 | A SELECT executed as Member A (real JWT) on standup_entries returns 0 rows of Member B, even when the workspace_id is known; an UPDATE/DELETE executed as Member A on Member B's entry ID is rejected by RLS — not silently accepted | "RLS is enabled on the table" — enabled ≠ correct write policies; "RLS covers reads so writes are fine" — read and write policies are separate | standup_entries table schema and RLS policies for SELECT, UPDATE, DELETE (S-03 ships SELECT policies; S-06 adds write-path routes); whether any API route uses the service-role key (which bypasses RLS) | Integration against local Supabase; real JWT per role for both read and write operations | Service-role key in tests — bypasses RLS and produces false-green results for both reads and writes |
 | #3 | A Member-role session hitting the team feed endpoint is rejected (403 or redirect), not served team data; the check is enforced at the app layer, independent of DB | "The database won't return other members' rows anyway" — app-layer role check is a separate defense layer | How role gating is implemented in the team feed route (per-page check vs. middleware extension); what the route will be named in S-05 | Integration: Member session → team feed endpoint → assert 403/redirect | Accepting empty data as proof of gating — empty data could be a silent RLS gap, not a correct role check |
-| #4 | Alert fires at threshold on consecutive business days with similar blockers; does NOT fire when days are non-consecutive; does NOT fire when blockers differ | "A happy-path test shows it fired" — does not cover non-firing branches | Similarity function signature and threshold mechanism; business-day gap evaluation logic; alert storage model | Unit: pure function tests with explicit input sequences | Oracle from implementation output — expected value must come from the PRD business rule (threshold N, consecutive days, similarity definition), not the function's current return value |
+| #4 | Alert fires only after member confirmation on consecutive business days at threshold; does NOT fire when: days are non-consecutive, blockers are evaluated as different, or member dismisses the suggestion; confirmation event is not silently lost on network failure | "A happy-path test shows it fired" — does not cover the non-firing branches or the confirmation-required guard; "confirmation UI exists so it fires" — confirmed ≠ persisted | Similarity evaluation and business-day gap evaluation logic; confirmation event storage model; whether a dismissed suggestion can be resurfaced; alert storage model | Unit: pure function tests with explicit input sequences (blocker similarity + day gap + threshold); Integration: confirmation → assert alert persisted; dismiss → assert no alert | Oracle from implementation output — expected value must come from the PRD v3 business rule (threshold N, consecutive business days, similarity definition, confirmation required), not the function's current return value |
 | #5 | Streak=3 for Mon/Tue/Wed entries; streak=2 for Fri+Mon entries; streak=1 for lone entry; timezone boundary does not miscalculate | "Streak increments by 1 each day" — does not cover Fri→Mon or timezone edge | Business-day streak function signature; how the UTC vs. local decision was resolved; how weekend entries are handled | Unit: pure function with explicit date sequences | Date tests covering only Mon–Tue–Wed; miss the Friday-to-Monday boundary |
 | #6 | Second call with the same used token is rejected; token is not valid for a different email address; workspace membership matches expectations after acceptance | "The token is a UUID so it's secret enough" — obscurity is not access control | Token generation, storage, and invalidation model; whether the token is email-bound; invite table schema | Integration: submit invite acceptance twice; assert second call rejected | Testing only the happy-path acceptance flow; misses replay/reuse which is the actual abuse vector |
+| #7 | After deleting a standup entry, streak recalculates to the correct value; after deleting an entry that triggered a confirmed blocker alert, alert state is handled consistently (deleted or marked stale — not orphaned); after editing an entry, streak reflects the edit if applicable | "The entry is deleted so it's gone" — derived state (streak column or cached value, alert FK) may not be recalculated | How streak is stored (column vs. derived-on-read); whether confirmed alerts store a FK to entries; delete cascade or nullification policy on that FK (S-06 must ship first) | Integration: submit entries → confirm alert → delete source entry → verify streak and alert state | Testing only the "delete own most recent entry" happy path; missing mid-streak delete and the confirmed-alert-orphan cases |
 
 ---
 
@@ -71,10 +73,11 @@ orchestrator updates Status and Change folder as artifacts appear on disk.
 
 | # | Phase name | Goal | Risks covered | Test types | Status | Change folder |
 |---|---|---|---|---|---|---|
-| 1 | Runner + auth/routing protection | Bootstrap Vitest; prove middleware correctly gates unauthenticated requests; protect against new-route-gap regression | #1 | integration (HTTP/middleware) | change opened | context/changes/testing-runner-auth-routing/ |
+| 1 | Runner + auth/routing protection | Bootstrap Vitest; prove middleware correctly gates unauthenticated requests; protect against new-route-gap regression | #1 | integration (HTTP/middleware) | implementing | context/changes/testing-runner-auth-routing/ |
 | 2 | Standup data isolation | Prove standup_entries RLS enforces absolute horizontal isolation under a real Member JWT; document the service-role trap | #2 | integration (local Supabase, real JWT) | not started | — |
-| 3 | Domain logic — streak + blocker | Unit tests for business-day streak boundary and blocker alert firing logic | #4, #5 | unit | not started | — |
+| 3 | Domain logic — streak + blocker | Unit tests for business-day streak boundary and blocker alert firing logic (Phase 3.1: streak tests, gates on S-03; Phase 3.2: blocker tests, gates on S-04) | #4, #5 | unit | planned | context/changes/test-phase-3/ |
 | 4 | Security — role gating + invite | Prove team feed rejects Members; prove invite token replay is rejected and is email-bound | #3, #6 | integration | not started | — |
+| 5 | Entry mutation integrity | Prove edit/delete correctly recalculates streak; prove confirmed alert is not orphaned on entry deletion; prove write-path IDOR is rejected by RLS (extends Phase 2 scope) | #7 (write-path IDOR component of #2 also tested here) | integration | not started | — |
 
 **Status vocabulary (fixed):**
 
@@ -90,8 +93,9 @@ orchestrator updates Status and Change folder as artifacts appear on disk.
 **Phase timing dependencies:**
 - Phase 1: can start now (S-01 is done; middleware and auth routes exist).
 - Phase 2: gates on S-03 shipping (standup_entries table must exist).
-- Phase 3: gates on S-03 and S-04 shipping (streak and blocker functions must exist).
+- Phase 3: Phase 3.1 gates on S-03 shipping (`calculateStreak` must exist in `src/lib/streak.ts`); Phase 3.2 gates on S-04 shipping (`isNextBusinessDay` + `shouldSuggestBlockerMatch` must exist in `src/lib/blocker.ts`).
 - Phase 4: gates on S-02 and S-05 shipping (invite flow and team feed must exist).
+- Phase 5: gates on S-06 shipping (edit/delete routes must exist; S-03 and S-04 also required for derived-state tests).
 
 ---
 
@@ -135,7 +139,17 @@ relevant rollout phase ships.
 
 ### 6.1 Adding a unit test
 
-TBD — see §3 Phase 3 (domain logic sub-phase will document the unit test location, naming convention, reference test, and run command for streak/blocker logic).
+**Location**: `src/__tests__/` — all Vitest tests live here; picked up automatically by `vitest.config.ts` include pattern `src/__tests__/**/*.test.ts`.
+**Naming**: `{feature}.test.ts` (e.g., `streak.test.ts`, `blocker-detection.test.ts`).
+**Import pattern**:
+```typescript
+import { describe, it, expect } from "vitest";        // no globals — must import explicitly
+import { fn } from "@/lib/{module}";                   // @/ resolves to src/
+```
+**Run command**: `npm test` (single-run CI mode); `npm run test:watch` (development).
+**Environment**: Node.js — no browser globals, no Supabase client needed for pure functions.
+**Reference tests**: `src/__tests__/streak.test.ts` (date-fixture pure function), `src/__tests__/blocker-detection.test.ts` (injectable-stub pure function). See `context/changes/test-phase-3/plan.md` for the full test-case oracles.
+**Key pattern**: Assertions must cite the PRD business rule they test, not the function output. The expected value comes from the spec, not the current return value of the function. Injecting dependencies (e.g., `similarityFn: () => true`) keeps the logic under test isolated from not-yet-implemented layers.
 
 ### 6.2 Adding an integration test for a middleware/routing rule
 
@@ -148,6 +162,10 @@ TBD — see §3 Phase 2 (data isolation sub-phase will document how to issue a q
 ### 6.4 Adding a test for a new protected API endpoint
 
 TBD — see §3 Phase 1 and Phase 4. Phase 1 documents the auth-gate pattern; Phase 4 adds the role-gate variant.
+
+### 6.5 Adding a test for entry mutation + derived state consistency
+
+TBD — see §3 Phase 5 (entry mutation integrity sub-phase will document how to test streak recalculation after edit/delete, how to assert confirmed-alert FK state after entry deletion, and how to verify write-path IDOR rejection via real Member JWT).
 
 ### 6.5 Per-rollout-phase notes
 
@@ -167,7 +185,8 @@ Exclusions agreed during the rollout (Phase 2 interview, Q5 and project context)
 
 ## 8. Freshness Ledger
 
-- Strategy (§1–§5) last reviewed: 2026-06-05
+- Strategy (§1–§5) last reviewed: 2026-06-05 (§2 updated for PRD v3 + Roadmap v2)
+- Source documents: PRD v3 (`context/foundation/prd-v3.md`), Roadmap v2 (`context/foundation/roadmap.md` updated 2026-06-05)
 - Stack versions last verified: 2026-06-05
 - AI-native tool references last verified: N/A — no AI-native test layer planned for current rollout
 
