@@ -364,22 +364,22 @@ This plan IS the testing strategy. All deliverables are test files. The risk-res
 
 #### Automated
 
-- [x] 2.0 `src/lib/blocker.ts` stub created with `isNextBusinessDay` + `shouldSuggestBlockerMatch` contracts
+- [x] 2.0 `src/lib/blocker.ts` stub created with `isNextBusinessDay` + `shouldSuggestBlockerMatch` contracts — b26a215
 - [ ] 2.1 `npm test` exits 0 with all 11 blocker-detection tests passing (plus all prior tests) — gated: verify after S-04 ships
-- [x] 2.2 `npm run lint` passes with both new files
-- [x] 2.3 TypeScript compilation succeeds
+- [x] 2.2 `npm run lint` passes with both new files — b26a215
+- [x] 2.3 TypeScript compilation succeeds — b26a215
 
 #### Manual
 
-- [x] 2.4 Test output identifies which business-day rule each test exercises
-- [x] 2.5 The `alwaysMatch`/`neverMatch` stubs make similarity independence obvious to a future reader
-- [x] 2.6 Test 6 (null blocker) comment references US-02 acceptance criteria
+- [x] 2.4 Test output identifies which business-day rule each test exercises — b26a215
+- [x] 2.5 The `alwaysMatch`/`neverMatch` stubs make similarity independence obvious to a future reader — b26a215
+- [x] 2.6 Test 6 (null blocker) comment references US-02 acceptance criteria — b26a215
 
 ### Phase 3: Cookbook and test-plan update
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` passes
+- [x] 3.1 `npm run lint` passes
 
 #### Manual
 
