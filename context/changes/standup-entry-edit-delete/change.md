@@ -1,7 +1,7 @@
 ---
-change_id: member-invite-and-join
-title: Member invite and join
-status: plan_reviewed
+change_id: standup-entry-edit-delete
+title: Standup entry edit delete
+status: new
 created: 2026-06-05
 updated: 2026-06-05
 archived_at: null

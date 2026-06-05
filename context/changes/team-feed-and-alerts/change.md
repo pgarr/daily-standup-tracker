@@ -1,7 +1,7 @@
 ---
-change_id: member-invite-and-join
-title: Member invite and join
-status: plan_reviewed
+change_id: team-feed-and-alerts
+title: Team feed and alerts
+status: new
 created: 2026-06-05
 updated: 2026-06-05
 archived_at: null
