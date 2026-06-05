@@ -3,7 +3,7 @@ project: "Daily Standup Tracker"
 version: 1
 status: draft
 created: 2026-06-04
-updated: 2026-06-04
+updated: 2026-06-05
 prd_version: 2
 main_goal: market-feedback
 top_blocker: time
@@ -28,7 +28,7 @@ Developers and knowledge workers have no dedicated home for their daily standup 
 | ID   | Change ID                      | Outcome (user can …)                                                                           | Prerequisites          | PRD refs                            | Status   |
 |------|--------------------------------|------------------------------------------------------------------------------------------------|------------------------|-------------------------------------|----------|
 | F-01 | workspace-member-schema        | (foundation) workspace and workspace_member tables exist with RLS                             | —                      | NFR (data isolation), Access Control | done     |
-| S-01 | auth-and-workspace             | register, log in/out, and create a workspace (becoming Team Lead)                              | F-01                   | FR-001, FR-002, FR-003              | proposed |
+| S-01 | auth-and-workspace             | register, log in/out, and create a workspace (becoming Team Lead)                              | F-01                   | FR-001, FR-002, FR-003              | done     |
 | S-02 | member-invite-and-join         | Team Lead invites a member by email; invited user joins the workspace as a Member              | S-01                   | FR-004, FR-005                      | proposed |
 | S-03 | standup-submission-and-history | submit a standup, view their history list, and see their streak                                | S-01                   | FR-006, FR-009, FR-011, US-01       | proposed |
 | S-04 | blocker-detection-flow         | submit two similar consecutive blockers, see a match suggestion, confirm it, and see an alert  | S-03                   | FR-012, US-02                       | proposed |
@@ -82,7 +82,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** workspace creation must wire correctly with the F-01 schema (insert into `workspace`, assign Team Lead role in `workspace_member`); this is the root of the entire auth + access control chain — a schema mismatch here propagates through every downstream slice
-- **Status:** proposed
+- **Status:** done
 
 ### S-02: member-invite-and-join
 
@@ -171,3 +171,4 @@ Non-blocking implementation questions (do not block planning; surface at `/10x-p
 (Empty on first generation. `/10x-archive` appends an entry here — and flips that item's `Status` to `done` — when a change whose `Change ID` matches the item is archived.)
 
 - **F-01: (foundation) workspace and workspace_member tables exist with RLS** — Archived 2026-06-04 → `context/archive/2026-06-04-workspace-member-schema/`. Lesson: —.
+- **S-01: user can register with email + password, log in, log out, and a newly registered user can create a workspace and become its Team Lead.** — Archived 2026-06-05 → `context/archive/2026-06-04-auth-and-workspace/`. Lesson: —.
