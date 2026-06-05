@@ -273,30 +273,30 @@ No new Supabase migrations in this slice. All schema changes (workspace, workspa
 
 #### Automated
 
-- [x] 2.1 npm run build passes
-- [x] 2.2 npm run lint passes
+- [x] 2.1 npm run build passes — 8ee8a9f
+- [x] 2.2 npm run lint passes — 8ee8a9f
 
 #### Manual
 
-- [x] 2.3 Signing in with no workspace redirects to /workspace/setup
-- [x] 2.4 Signing in with existing workspace redirects to /dashboard
-- [x] 2.5 /workspace/setup page renders the workspace name form
-- [x] 2.6 Submitting empty name shows inline validation error
-- [x] 2.7 Submitting valid name creates workspace and workspace_member rows in Supabase Studio
-- [x] 2.8 workspace_member.role is team_lead for the new row
-- [x] 2.9 After creation user lands on /dashboard
-- [x] 2.10 Navigating to /workspace/setup after workspace exists redirects to /dashboard
+- [x] 2.3 Signing in with no workspace redirects to /workspace/setup — 8ee8a9f
+- [x] 2.4 Signing in with existing workspace redirects to /dashboard — 8ee8a9f
+- [x] 2.5 /workspace/setup page renders the workspace name form — 8ee8a9f
+- [x] 2.6 Submitting empty name shows inline validation error — 8ee8a9f
+- [x] 2.7 Submitting valid name creates workspace and workspace_member rows in Supabase Studio — 8ee8a9f
+- [x] 2.8 workspace_member.role is team_lead for the new row — 8ee8a9f
+- [x] 2.9 After creation user lands on /dashboard — 8ee8a9f
+- [x] 2.10 Navigating to /workspace/setup after workspace exists redirects to /dashboard — 8ee8a9f
 
 ### Phase 3: Dashboard update and signup.ts Zod validation
 
 #### Automated
 
-- [ ] 3.1 npm run build passes
-- [ ] 3.2 npm run lint passes
+- [x] 3.1 npm run build passes
+- [x] 3.2 npm run lint passes
 
 #### Manual
 
-- [ ] 3.3 Dashboard shows workspace name, Team Lead label, and user email
-- [ ] 3.4 Signup with invalid email shows validation error
-- [ ] 3.5 Signup with short password shows validation error
-- [ ] 3.6 Full E2E: register → login → workspace setup → dashboard with correct workspace name and Team Lead role
+- [x] 3.3 Dashboard shows workspace name, Team Lead label, and user email
+- [x] 3.4 Signup with invalid email shows validation error
+- [x] 3.5 Signup with short password shows validation error
+- [x] 3.6 Full E2E: register → login → workspace setup → dashboard with correct workspace name and Team Lead role

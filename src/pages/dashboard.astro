@@ -1,19 +1,26 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 
-const { user } = Astro.locals;
+const { user, workspace, workspaceMember } = Astro.locals;
+const role = workspaceMember?.role === "team_lead" ? "Team Lead" : (workspaceMember?.role ?? "Member");
 ---
 
 <Layout title="Dashboard">
   <div class="bg-cosmic flex min-h-screen items-center justify-center p-4">
-    <div class="rounded-2xl border border-white/10 bg-white/10 p-8 text-center text-white backdrop-blur-xl">
-      <h1 class="mb-4 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
-        Dashboard
+    <div
+      class="w-full max-w-sm rounded-2xl border border-white/10 bg-white/10 p-8 text-center text-white backdrop-blur-xl"
+    >
+      <h1 class="mb-6 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
+        {workspace?.name}
       </h1>
-      <p class="text-blue-100/80">
-        Welcome, <span class="font-semibold text-white">{user?.email}</span>
+      <span
+        class="inline-block rounded-full border border-purple-400/40 bg-purple-500/20 px-3 py-1 text-xs font-medium text-purple-200"
+      >
+        {role}
+      </span>
+      <p class="mt-4 text-sm text-blue-100/60">
+        Signed in as <span class="font-medium text-white">{user?.email}</span>
       </p>
-      <p class="mt-2 text-sm text-blue-100/50">This page is only for authenticated users.</p>
       <form method="POST" action="/api/auth/signout" class="mt-6">
         <button
           type="submit"
