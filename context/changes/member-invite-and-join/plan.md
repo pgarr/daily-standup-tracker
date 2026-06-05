@@ -541,9 +541,9 @@ Second migration for this project: `supabase/migrations/20260605000000_workspace
 
 #### Automated
 
-- [ ] 1.1 npx supabase db reset applies migration without errors
-- [ ] 1.2 npm run build passes
-- [ ] 1.3 npm run lint passes
+- [x] 1.1 npx supabase db reset applies migration without errors
+- [x] 1.2 npm run build passes
+- [x] 1.3 npm run lint passes
 
 #### Manual
 

@@ -14,3 +14,14 @@ export interface WorkspaceMember {
   role: UserRole;
   joined_at: string;
 }
+
+export interface WorkspaceInvitation {
+  id: string;
+  workspace_id: string;
+  email: string;
+  token: string;
+  role: UserRole;
+  created_at: string;
+  expires_at: string;
+  accepted_at: string | null;
+}
