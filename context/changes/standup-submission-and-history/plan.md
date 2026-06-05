@@ -380,31 +380,31 @@ S-05 will add a Team Lead SELECT policy on `standup_entries` (to make all member
 
 #### Automated
 
-- [x] 1.1 npx supabase db reset applies migration without errors
-- [x] 1.2 npm run build passes
-- [x] 1.3 npm run lint passes
+- [x] 1.1 npx supabase db reset applies migration without errors — 160c206
+- [x] 1.2 npm run build passes — 160c206
+- [x] 1.3 npm run lint passes — 160c206
 
 #### Manual
 
-- [x] 1.4 standup_entries table exists in Supabase Studio with correct columns and UNIQUE constraint
-- [x] 1.5 2 RLS policies visible on standup_entries (SELECT, INSERT)
-- [x] 1.6 Authenticated member can INSERT an entry and SELECT it back; second INSERT with same (user_id, submitted_date) returns 23505
-- [x] 1.7 Anon SELECT on standup_entries returns 0 rows
+- [x] 1.4 standup_entries table exists in Supabase Studio with correct columns and UNIQUE constraint — 160c206
+- [x] 1.5 2 RLS policies visible on standup_entries (SELECT, INSERT) — 160c206
+- [x] 1.6 Authenticated member can INSERT an entry and SELECT it back; second INSERT with same (user_id, submitted_date) returns 23505 — 160c206
+- [x] 1.7 Anon SELECT on standup_entries returns 0 rows — 160c206
 
 ### Phase 2: calculateStreak + submit API
 
 #### Automated
 
-- [ ] 2.1 npm test exits 0 (all 7 streak unit tests pass)
-- [ ] 2.2 npm run build passes
-- [ ] 2.3 npm run lint passes
+- [x] 2.1 npm test exits 0 (all 7 streak unit tests pass)
+- [x] 2.2 npm run build passes
+- [x] 2.3 npm run lint passes
 
 #### Manual
 
-- [ ] 2.4 POST to /api/standup/submit with valid fields creates a row in Supabase Studio
-- [ ] 2.5 POST with duplicate submitted_date redirects to /dashboard?error=You%20already%20submitted%20a%20standup%20today.
-- [ ] 2.6 POST without did or plan redirects with a validation error
-- [ ] 2.7 POST without auth session redirects to /auth/signin
+- [x] 2.4 POST to /api/standup/submit with valid fields creates a row in Supabase Studio
+- [x] 2.5 POST with duplicate submitted_date redirects to /dashboard?error=You%20already%20submitted%20a%20standup%20today.
+- [x] 2.6 POST without did or plan redirects with a validation error
+- [x] 2.7 POST without auth session redirects to /auth/signin
 
 ### Phase 3: Dashboard UI
 

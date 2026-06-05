@@ -18,6 +18,9 @@ const EXPLICIT_PUBLIC_ROUTES = new Set([
   "/api/auth/signup",
   "/api/auth/signout",
   "/api/workspace/create",
+  "/api/workspace/invite", // inline auth + team_lead guard
+  "/api/workspace/invite-cancel", // inline auth + team_lead guard
+  "/api/standup/submit", // inline auth guard
 ]);
 
 function collectPageFiles(dir: string): string[] {
