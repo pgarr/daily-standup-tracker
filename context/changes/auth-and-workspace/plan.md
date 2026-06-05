@@ -291,12 +291,12 @@ No new Supabase migrations in this slice. All schema changes (workspace, workspa
 
 #### Automated
 
-- [x] 3.1 npm run build passes
-- [x] 3.2 npm run lint passes
+- [x] 3.1 npm run build passes — 9add356
+- [x] 3.2 npm run lint passes — 9add356
 
 #### Manual
 
-- [x] 3.3 Dashboard shows workspace name, Team Lead label, and user email
-- [x] 3.4 Signup with invalid email shows validation error
-- [x] 3.5 Signup with short password shows validation error
-- [x] 3.6 Full E2E: register → login → workspace setup → dashboard with correct workspace name and Team Lead role
+- [x] 3.3 Dashboard shows workspace name, Team Lead label, and user email — 9add356
+- [x] 3.4 Signup with invalid email shows validation error — 9add356
+- [x] 3.5 Signup with short password shows validation error — 9add356
+- [x] 3.6 Full E2E: register → login → workspace setup → dashboard with correct workspace name and Team Lead role — 9add356
