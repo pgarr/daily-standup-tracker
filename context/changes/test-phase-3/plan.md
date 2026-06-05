@@ -50,7 +50,7 @@ These signatures are the contracts that S-03 and S-04 must implement. Any change
 
 ```typescript
 export function calculateStreak(
-  entries: ReadonlyArray<{ submitted_date: string }>,
+  entries: readonly { submitted_date: string }[],
   // 'YYYY-MM-DD' strings, sorted descending (newest first).
   // Only submitted_date is consumed; other StandupEntry fields are ignored.
 ): number
@@ -72,7 +72,7 @@ export function isNextBusinessDay(prev: Date, next: Date): boolean
 
 ```typescript
 export function shouldSuggestBlockerMatch(
-  entries: ReadonlyArray<{ submitted_date: string; blockers: string | null }>,
+  entries: readonly { submitted_date: string; blockers: string | null }[],
   // Sorted descending (newest first). Only submitted_date and blockers consumed.
   threshold: number,
   // From workspace.alert_threshold. Number of consecutive business days required.
@@ -350,30 +350,30 @@ This plan IS the testing strategy. All deliverables are test files. The risk-res
 
 #### Automated
 
-- [x] 1.0 `src/lib/streak.ts` stub created with `calculateStreak` contract
+- [x] 1.0 `src/lib/streak.ts` stub created with `calculateStreak` contract — 6c2b244
 - [ ] 1.1 `npm test` exits 0 with 7 streak tests passing — gated: verify after S-03 ships
-- [x] 1.2 `npm run lint` passes with both new files
-- [x] 1.3 TypeScript compilation succeeds
+- [x] 1.2 `npm run lint` passes with both new files — 6c2b244
+- [x] 1.3 TypeScript compilation succeeds — 6c2b244
 
 #### Manual
 
-- [x] 1.4 Test names in `npm test` output are human-readable and identify the business-day rule exercised
-- [x] 1.5 Test 6a/6b comments are clear enough that an S-03 implementer understands the timezone storage contract
+- [x] 1.4 Test names in `npm test` output are human-readable and identify the business-day rule exercised — 6c2b244
+- [x] 1.5 Test 6a/6b comments are clear enough that an S-03 implementer understands the timezone storage contract — 6c2b244
 
 ### Phase 2: Blocker detection unit tests (Phase 3.2 — gates on S-04)
 
 #### Automated
 
-- [ ] 2.0 `src/lib/blocker.ts` stub created with `isNextBusinessDay` + `shouldSuggestBlockerMatch` contracts
+- [x] 2.0 `src/lib/blocker.ts` stub created with `isNextBusinessDay` + `shouldSuggestBlockerMatch` contracts
 - [ ] 2.1 `npm test` exits 0 with all 11 blocker-detection tests passing (plus all prior tests) — gated: verify after S-04 ships
-- [ ] 2.2 `npm run lint` passes with both new files
-- [ ] 2.3 TypeScript compilation succeeds
+- [x] 2.2 `npm run lint` passes with both new files
+- [x] 2.3 TypeScript compilation succeeds
 
 #### Manual
 
-- [ ] 2.4 Test output identifies which business-day rule each test exercises
-- [ ] 2.5 The `alwaysMatch`/`neverMatch` stubs make similarity independence obvious to a future reader
-- [ ] 2.6 Test 6 (null blocker) comment references US-02 acceptance criteria
+- [x] 2.4 Test output identifies which business-day rule each test exercises
+- [x] 2.5 The `alwaysMatch`/`neverMatch` stubs make similarity independence obvious to a future reader
+- [x] 2.6 Test 6 (null blocker) comment references US-02 acceptance criteria
 
 ### Phase 3: Cookbook and test-plan update
 
