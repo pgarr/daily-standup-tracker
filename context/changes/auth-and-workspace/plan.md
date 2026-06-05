@@ -93,7 +93,7 @@ const WORKSPACE_REQUIRED_ROUTES = ["/dashboard"];
 `/workspace` in `AUTH_REQUIRED_ROUTES` covers `/workspace/setup` (requires auth but not a workspace).
 `/dashboard` in `WORKSPACE_REQUIRED_ROUTES` covers the workspace gate.
 
-Workspace context loading runs only when `user` and `client` are both non-null. Uses `maybeSingle()` on `workspace_member` query. On error (network/RLS failure), defaults to `null` and lets routing gates handle the redirect naturally.
+Workspace context loading runs only when `user` and `client` are both non-null. Use a single embedded select — `.select("*, workspace:workspace_id(*)")` with `maybeSingle()` — to fetch member and workspace in one round-trip. Then `context.locals.workspace = member?.workspace ?? null` and strip the nested field before assigning `context.locals.workspaceMember`. On error (network/RLS failure), defaults to `null` and lets routing gates handle the redirect naturally.
 
 ### Success Criteria
 
@@ -135,7 +135,7 @@ Adds the `/workspace/setup` page with a React form component, the `POST /api/wor
 
 **Intent**: Client-side form component for the workspace setup screen. Follows the same patterns as `SignInForm.tsx` and `SignUpForm.tsx` in `src/components/auth/` — uses `FormField`, `SubmitButton`, `ServerError` from the same directory. POSTs to `/api/workspace/create`.
 
-**Contract**: One field: `name` (text, required, max 100 chars). Client-side validation: empty name shows inline error before submit. Submits as `application/x-www-form-urlencoded` (FormData via `<form>`). Server errors surfaced via `ServerError` component.
+**Contract**: One field: `name` (text, required, max 100 chars). Client-side validation: empty name shows inline error before submit. Submits as `application/x-www-form-urlencoded` (FormData via `<form>`). Server errors surfaced via `ServerError` component. Pass a `<Building2 />` icon (lucide-react) to the name `FormField` — the `icon` prop is required, consistent with SignInForm and SignUpForm.
 
 #### 3. Workspace creation API endpoint
 
@@ -259,15 +259,15 @@ No new Supabase migrations in this slice. All schema changes (workspace, workspa
 
 #### Automated
 
-- [ ] 1.1 npm run build passes with no TypeScript errors
-- [ ] 1.2 npm run lint passes
+- [x] 1.1 npm run build passes with no TypeScript errors
+- [x] 1.2 npm run lint passes
 
 #### Manual
 
-- [ ] 1.3 Unauthenticated request to /dashboard redirects to /auth/signin
-- [ ] 1.4 Unauthenticated request to /workspace/setup redirects to /auth/signin
-- [ ] 1.5 Authenticated user with no workspace hitting /dashboard redirects to /workspace/setup
-- [ ] 1.6 Authenticated user with a workspace can access /dashboard without redirect
+- [x] 1.3 Unauthenticated request to /dashboard redirects to /auth/signin
+- [x] 1.4 Unauthenticated request to /workspace/setup redirects to /auth/signin
+- [x] 1.5 Authenticated user with no workspace hitting /dashboard redirects to /workspace/setup
+- [x] 1.6 Authenticated user with a workspace can access /dashboard without redirect
 
 ### Phase 2: Workspace setup page and API route
 
@@ -280,11 +280,12 @@ No new Supabase migrations in this slice. All schema changes (workspace, workspa
 
 - [ ] 2.3 Signing in with no workspace redirects to /workspace/setup
 - [ ] 2.4 Signing in with existing workspace redirects to /dashboard
-- [ ] 2.5 Submitting empty name shows inline validation error
-- [ ] 2.6 Submitting valid name creates workspace and workspace_member rows in Supabase Studio
-- [ ] 2.7 workspace_member.role is team_lead for the new row
-- [ ] 2.8 After creation user lands on /dashboard
-- [ ] 2.9 Navigating to /workspace/setup after workspace exists redirects to /dashboard
+- [ ] 2.5 /workspace/setup page renders the workspace name form
+- [ ] 2.6 Submitting empty name shows inline validation error
+- [ ] 2.7 Submitting valid name creates workspace and workspace_member rows in Supabase Studio
+- [ ] 2.8 workspace_member.role is team_lead for the new row
+- [ ] 2.9 After creation user lands on /dashboard
+- [ ] 2.10 Navigating to /workspace/setup after workspace exists redirects to /dashboard
 
 ### Phase 3: Dashboard update and signup.ts Zod validation
 
