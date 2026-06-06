@@ -3,7 +3,7 @@ project: "Daily Standup Tracker"
 version: 2
 status: draft
 created: 2026-06-04
-updated: 2026-06-05
+updated: 2026-06-06
 prd_version: 3
 main_goal: market-feedback
 top_blocker: time
@@ -29,7 +29,7 @@ Developers and knowledge workers have no dedicated home for their daily standup 
 |------|--------------------------------|-------------------------------------------------------------------------------------------------|------------------------|--------------------------------------|----------|
 | F-01 | workspace-member-schema        | (foundation) workspace and workspace_member tables exist with RLS                               | —                      | NFR (data isolation), Access Control | done     |
 | S-01 | auth-and-workspace             | register, log in/out, and create a workspace (becoming Team Lead)                               | F-01                   | FR-001, FR-002, FR-003               | done     |
-| S-02 | member-invite-and-join         | Team Lead invites a member by email; invited user joins the workspace as a Member               | S-01                   | FR-004, FR-005                       | ready    |
+| S-02 | member-invite-and-join         | Team Lead invites a member by email; invited user joins the workspace as a Member               | S-01                   | FR-004, FR-005                       | done     |
 | S-03 | standup-submission-and-history | submit a standup, view their history list, and see their streak                                  | S-01                   | FR-006, FR-009, FR-011, US-01        | ready    |
 | S-04 | blocker-detection-flow         | submit two similar consecutive blockers, see a match suggestion, confirm it, and see an alert    | S-03                   | FR-012, US-02                        | proposed |
 | S-05 | team-feed-and-alerts           | view the team feed with today's entries, confirmed alerts, and configure the alert threshold     | S-01, S-02, S-03, S-04 | FR-013, FR-014, FR-015, US-03        | proposed |
@@ -97,7 +97,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - How will the invite email be sent — Supabase built-in invite / magic link, custom SMTP, or Resend? — Owner: user. Block: no (implementation choice; any mechanism satisfying FR-004/FR-005 acceptance criteria is valid).
 - **Risk:** invite acceptance merges with registration (per FR-005: "the link opens registration pre-filled with the invited email"); this double-duty path needs care to avoid orphaned invite records or duplicate accounts; sequenced before S-05 because the team feed needs actual members to be meaningful
-- **Status:** ready
+- **Status:** done
 
 ### S-03: standup-submission-and-history
 
@@ -187,3 +187,4 @@ Non-blocking implementation questions (do not block planning; surface at `/10x-p
 
 - **F-01: (foundation) workspace and workspace_member tables exist with RLS** — Archived 2026-06-04 → `context/archive/2026-06-04-workspace-member-schema/`. Lesson: —.
 - **S-01: user can register with email + password, log in, log out, and a newly registered user can create a workspace and become its Team Lead.** — Archived 2026-06-05 → `context/archive/2026-06-04-auth-and-workspace/`. Lesson: —.
+- **S-02: Team Lead can send an email invite to a new member; the invited user registers via the invite link and appears in the workspace as a Member.** — Archived 2026-06-06 → `context/archive/2026-06-05-member-invite-and-join/`. Lesson: —.
