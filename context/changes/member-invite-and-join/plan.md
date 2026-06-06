@@ -548,11 +548,11 @@ Second migration for this project: `supabase/migrations/20260605000000_workspace
 
 #### Manual
 
-- [x] 1.4 workspace_invitation table exists in Studio with correct columns, constraints, and defaults
-- [x] 1.5 4 new RLS policies on workspace_invitation and 1 new policy on workspace_member visible in Studio
-- [x] 1.6 Team Lead can INSERT into workspace_invitation; non-team-lead cannot
-- [x] 1.7 get_invitation_by_token returns correct row for valid token; empty for invalid or expired
-- [x] 1.8 has_valid_invitation returns true for valid pending invite; false for expired or accepted
+- [x] 1.4 workspace_invitation table exists in Studio with correct columns, constraints, and defaults — 16150d6
+- [x] 1.5 4 new RLS policies on workspace_invitation and 1 new policy on workspace_member visible in Studio — 16150d6
+- [x] 1.6 Team Lead can INSERT into workspace_invitation; non-team-lead cannot — 16150d6
+- [x] 1.7 get_invitation_by_token returns correct row for valid token; empty for invalid or expired — 16150d6
+- [x] 1.8 has_valid_invitation returns true for valid pending invite; false for expired or accepted — 16150d6
 
 ### Phase 2: Resend integration and invite management page
 
@@ -563,14 +563,14 @@ Second migration for this project: `supabase/migrations/20260605000000_workspace
 
 #### Manual
 
-- [ ] 2.3 /workspace/members redirects unauthenticated users to /auth/signin
-- [ ] 2.4 /workspace/members redirects Members to /dashboard
-- [ ] 2.5 Team Lead sees members page with correct Team Lead section
-- [ ] 2.6 Submitting invalid email shows client-side validation error
-- [ ] 2.7 Submitting valid email inserts workspace_invitation row and shows invite_sent feedback
-- [ ] 2.8 Without RESEND_API_KEY invite link is logged to console
-- [ ] 2.9 Cancel button deletes invitation row from Studio
-- [ ] 2.10 Inviting the same email twice (without cancel) shows duplicate error
+- [x] 2.3 /workspace/members redirects unauthenticated users to /auth/signin
+- [x] 2.4 /workspace/members redirects Members to /dashboard
+- [x] 2.5 Team Lead sees members page with correct Team Lead section
+- [x] 2.6 Submitting invalid email shows client-side validation error
+- [x] 2.7 Submitting valid email inserts workspace_invitation row and shows invite_sent feedback
+- [x] 2.8 Without RESEND_API_KEY invite link is logged to console
+- [x] 2.9 Cancel button deletes invitation row from Studio
+- [x] 2.10 Inviting the same email twice (without cancel) shows duplicate error
 
 ### Phase 3: Accept-invite flow
 
