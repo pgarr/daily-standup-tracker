@@ -410,18 +410,18 @@ S-05 will add a Team Lead SELECT policy on `standup_entries` (to make all member
 
 #### Automated
 
-- [ ] 3.1 npm run build passes with no TypeScript errors
-- [ ] 3.2 npm run lint passes
+- [x] 3.1 npm run build passes with no TypeScript errors
+- [x] 3.2 npm run lint passes
 
 #### Manual
 
-- [ ] 3.3 Dashboard shows standup form when no entry submitted today
-- [ ] 3.4 Valid submission redirects to /dashboard; read-only entry shown in place of form
-- [ ] 3.5 Refreshing /dashboard after submission shows read-only entry (durability check)
-- [ ] 3.6 Streak badge shows 🔥 Day 1 after first submission
-- [ ] 3.6a Streak is hidden before any entry is submitted
-- [ ] 3.6b Streak badge shows 🔥 Day 2 after two consecutive business-day submissions
-- [ ] 3.7 Submitting same day twice shows "You already submitted a standup today." inline error
-- [ ] 3.8 History list shows submitted entry; grows with each subsequent submission
-- [ ] 3.9 Blank did or plan shows client-side inline error without network round-trip
-- [ ] 3.10 All three fields (did, plan, blockers) appear in read-only entry view and history cards
+- [x] 3.3 Dashboard shows standup form when no entry submitted today
+- [x] 3.4 Valid submission redirects to /dashboard; read-only entry shown in place of form
+- [x] 3.5 Refreshing /dashboard after submission shows read-only entry (durability check)
+- [x] 3.6 Streak badge shows 🔥 Day 1 after first submission
+- [x] 3.6a Streak is hidden before any entry is submitted
+- [x] 3.6b Streak badge shows 🔥 Day 2 after two consecutive business-day submissions
+- [x] 3.7 Submitting same day twice shows "You already submitted a standup today." inline error
+- [x] 3.8 History list shows submitted entry; grows with each subsequent submission
+- [x] 3.9 Blank did or plan shows client-side inline error without network round-trip
+- [x] 3.10 All three fields (did, plan, blockers) appear in read-only entry view and history cards
