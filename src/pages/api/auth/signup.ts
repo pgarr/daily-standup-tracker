@@ -1,3 +1,5 @@
+export const prerender = false;
+
 import type { APIRoute } from "astro";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase";
@@ -17,12 +19,23 @@ export const POST: APIRoute = async (context) => {
   }
 
   const { email, password } = result.data;
-  const inviteToken = form.get("invite_token") as string | null;
+  const rawInviteToken = form.get("invite_token");
+  const inviteToken = typeof rawInviteToken === "string" ? rawInviteToken : null;
 
   const supabase = createClient(context.request.headers, context.cookies);
   if (!supabase) {
     return context.redirect(`/auth/signup?error=${encodeURIComponent("Supabase is not configured")}`);
   }
+
+  // When signing up via an invite, verify the submitted email matches the invite before creating an account.
+  if (inviteToken) {
+    const { data: inviteData } = await supabase.rpc("get_invitation_by_token", { p_token: inviteToken }).maybeSingle();
+    if (inviteData?.email !== email) {
+      const redirectBase = `/auth/accept-invite?token=${encodeURIComponent(inviteToken)}`;
+      return context.redirect(`${redirectBase}&error=invite_invalid`);
+    }
+  }
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,

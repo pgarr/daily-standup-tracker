@@ -36,9 +36,7 @@ export const POST: APIRoute = async (context) => {
     if (error.message.includes("already a member of a workspace")) {
       return context.redirect(`/auth/accept-invite?token=${encodeURIComponent(token)}&error=already_in_workspace`);
     }
-    return context.redirect(
-      `/auth/accept-invite?token=${encodeURIComponent(token)}&error=${encodeURIComponent(error.message)}`,
-    );
+    return context.redirect(`/auth/accept-invite?token=${encodeURIComponent(token)}&error=service_error`);
   }
 
   return context.redirect("/dashboard");

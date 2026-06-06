@@ -22,7 +22,7 @@ let lookupError: string | null = null;
 if (token && supabase) {
   const { data, error } = await supabase.rpc("get_invitation_by_token", { p_token: token }).maybeSingle();
   if (error) {
-    lookupError = error.message;
+    lookupError = "service_error";
   } else {
     invite = data as InviteRow | null;
   }
@@ -50,7 +50,8 @@ function resolveErrorMessage(err: string | null): string | null {
   if (!err) return null;
   if (err === "invite_invalid") return "This invite link has expired or has already been used.";
   if (err === "already_in_workspace") return "You are already a member of a workspace.";
-  return err;
+  if (err === "service_error") return "Something went wrong. Please try again.";
+  return "An unexpected error occurred.";
 }
 
 const displayError = resolveErrorMessage(errorParam);
