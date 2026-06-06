@@ -420,7 +420,7 @@ S-05 will add a Team Lead SELECT policy on `standup_entries` (to make all member
 - [x] 3.5 Refreshing /dashboard after submission shows read-only entry (durability check) — 303e4d7
 - [x] 3.6 Streak badge shows 🔥 Day 1 after first submission — 303e4d7
 - [x] 3.6a Streak is hidden before any entry is submitted — 303e4d7
-- [x] 3.6b Streak badge shows 🔥 Day 2 after two consecutive business-day submissions
+- [x] 3.6b Streak badge shows 🔥 Day 2 after two consecutive business-day submissions — 303e4d7
 - [x] 3.7 Submitting same day twice shows "You already submitted a standup today." inline error — 303e4d7
 - [x] 3.8 History list shows submitted entry; grows with each subsequent submission — 303e4d7
 - [x] 3.9 Blank did or plan shows client-side inline error without network round-trip — 303e4d7
