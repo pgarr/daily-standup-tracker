@@ -4,10 +4,10 @@ import { SubmitButton } from "@/components/auth/SubmitButton";
 import { ServerError } from "@/components/auth/ServerError";
 
 interface Props {
-  error?: string | null;
+  serverError?: string | null;
 }
 
-export default function StandupForm({ error }: Props) {
+export default function StandupForm({ serverError }: Props) {
   const [did, setDid] = useState("");
   const [plan, setPlan] = useState("");
   const [blockers, setBlockers] = useState("");
@@ -99,7 +99,7 @@ export default function StandupForm({ error }: Props) {
         />
       </div>
 
-      <ServerError message={error} />
+      <ServerError message={serverError} />
 
       <SubmitButton pendingText="Submitting..." icon={<Send className="size-4" />}>
         Submit standup
