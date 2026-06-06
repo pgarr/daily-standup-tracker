@@ -1,10 +1,10 @@
 ---
 change_id: standup-submission-and-history
 title: Standup submission and history
-status: impl_reviewed
+status: archived
 created: 2026-06-05
 updated: 2026-06-06
-archived_at: null
+archived_at: 2026-06-06T09:33:43Z
 ---
 
 ## Notes
