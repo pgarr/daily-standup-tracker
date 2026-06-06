@@ -548,11 +548,11 @@ Second migration for this project: `supabase/migrations/20260605000000_workspace
 
 #### Manual
 
-- [ ] 1.4 workspace_invitation table exists in Studio with correct columns, constraints, and defaults
-- [ ] 1.5 4 new RLS policies on workspace_invitation and 1 new policy on workspace_member visible in Studio
-- [ ] 1.6 Team Lead can INSERT into workspace_invitation; non-team-lead cannot
-- [ ] 1.7 get_invitation_by_token returns correct row for valid token; empty for invalid or expired
-- [ ] 1.8 has_valid_invitation returns true for valid pending invite; false for expired or accepted
+- [x] 1.4 workspace_invitation table exists in Studio with correct columns, constraints, and defaults
+- [x] 1.5 4 new RLS policies on workspace_invitation and 1 new policy on workspace_member visible in Studio
+- [x] 1.6 Team Lead can INSERT into workspace_invitation; non-team-lead cannot
+- [x] 1.7 get_invitation_by_token returns correct row for valid token; empty for invalid or expired
+- [x] 1.8 has_valid_invitation returns true for valid pending invite; false for expired or accepted
 
 ### Phase 2: Resend integration and invite management page
 
