@@ -2,13 +2,8 @@ import React, { useState } from "react";
 import { Mail } from "lucide-react";
 import { FormField } from "@/components/auth/FormField";
 import { SubmitButton } from "@/components/auth/SubmitButton";
-import { ServerError } from "@/components/auth/ServerError";
 
-interface Props {
-  serverError?: string | null;
-}
-
-export default function InviteForm({ serverError }: Props) {
+export default function InviteForm() {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState<string | undefined>();
 
@@ -46,7 +41,6 @@ export default function InviteForm({ serverError }: Props) {
         error={emailError}
         icon={<Mail className="size-4" />}
       />
-      <ServerError message={serverError} />
       <SubmitButton pendingText="Sending invite..." icon={<Mail className="size-4" />}>
         Send invite
       </SubmitButton>

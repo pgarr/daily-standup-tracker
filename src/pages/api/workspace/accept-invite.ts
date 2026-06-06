@@ -15,14 +15,18 @@ export const POST: APIRoute = async (context) => {
   }
 
   const supabase = createClient(context.request.headers, context.cookies);
+  const form = await context.request.formData();
+  const rawToken = form.get("token") as string | null;
+
   if (!supabase) {
-    return context.redirect(`/auth/accept-invite?error=${encodeURIComponent("Service unavailable")}`);
+    const base = rawToken ? `/auth/accept-invite?token=${encodeURIComponent(rawToken)}&` : "/auth/accept-invite?";
+    return context.redirect(`${base}error=service_error`);
   }
 
-  const form = await context.request.formData();
-  const result = schema.safeParse({ token: form.get("token") });
+  const result = schema.safeParse({ token: rawToken });
   if (!result.success) {
-    return context.redirect(`/auth/accept-invite?error=${encodeURIComponent("Invalid request")}`);
+    const base = rawToken ? `/auth/accept-invite?token=${encodeURIComponent(rawToken)}&` : "/auth/accept-invite?";
+    return context.redirect(`${base}error=${encodeURIComponent("Invalid request")}`);
   }
 
   const { token } = result.data;

@@ -42,7 +42,8 @@ export const POST: APIRoute = async (context) => {
     .from("workspace_invitation")
     .delete({ count: "exact" })
     .eq("id", id)
-    .eq("workspace_id", memberData.workspace_id);
+    .eq("workspace_id", memberData.workspace_id)
+    .is("accepted_at", null);
 
   if (error) {
     return context.redirect(`/workspace/members?error=${encodeURIComponent(error.message)}`);

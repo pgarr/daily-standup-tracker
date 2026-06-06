@@ -61,17 +61,17 @@ const displayError = resolveErrorMessage(errorParam);
   <div class="bg-cosmic flex min-h-screen items-center justify-center p-4">
     <div class="w-full max-w-sm rounded-2xl border border-white/10 bg-white/10 p-8 text-white backdrop-blur-xl">
       {
-        !token || !supabase ? (
+        !token ? (
           <div class="text-center">
             <h1 class="mb-3 text-xl font-bold text-red-300">Invalid invite link</h1>
             <p class="text-sm text-blue-100/60">
               This invite link is invalid. Contact your Team Lead for a new invite.
             </p>
           </div>
-        ) : lookupError ? (
+        ) : !supabase || lookupError ? (
           <div class="text-center">
-            <h1 class="mb-3 text-xl font-bold text-red-300">Service error</h1>
-            <p class="text-sm text-blue-100/60">{lookupError}</p>
+            <h1 class="mb-3 text-xl font-bold text-red-300">Service unavailable</h1>
+            <p class="text-sm text-blue-100/60">Something went wrong. Please try again later.</p>
           </div>
         ) : !invite ? (
           <div class="text-center">

@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 
 const isAutoConfirmed = import.meta.env.DEV;
+const hasInvite = !!Astro.url.searchParams.get("invite_token");
 
 const content = isAutoConfirmed
   ? {
@@ -28,6 +29,13 @@ const content = isAutoConfirmed
         {content.heading}
       </h1>
       <p class="mb-6 text-blue-100/80">{content.description}</p>
+      {
+        hasInvite && (
+          <p class="mb-6 rounded-lg border border-purple-400/30 bg-purple-400/10 px-4 py-3 text-sm text-purple-200">
+            After confirming your email, your invite to join the workspace will be waiting for you.
+          </p>
+        )
+      }
       <a href="/auth/signin" class="text-sm text-purple-300 hover:underline">
         {content.linkText}
       </a>

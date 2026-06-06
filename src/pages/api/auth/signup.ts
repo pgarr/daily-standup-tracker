@@ -29,9 +29,14 @@ export const POST: APIRoute = async (context) => {
 
   // When signing up via an invite, verify the submitted email matches the invite before creating an account.
   if (inviteToken) {
-    const { data: inviteData } = await supabase.rpc("get_invitation_by_token", { p_token: inviteToken }).maybeSingle();
+    const { data: inviteData, error: inviteError } = await supabase
+      .rpc("get_invitation_by_token", { p_token: inviteToken })
+      .maybeSingle();
+    const redirectBase = `/auth/accept-invite?token=${encodeURIComponent(inviteToken)}`;
+    if (inviteError) {
+      return context.redirect(`${redirectBase}&error=service_error`);
+    }
     if (inviteData?.email !== email) {
-      const redirectBase = `/auth/accept-invite?token=${encodeURIComponent(inviteToken)}`;
       return context.redirect(`${redirectBase}&error=invite_invalid`);
     }
   }
