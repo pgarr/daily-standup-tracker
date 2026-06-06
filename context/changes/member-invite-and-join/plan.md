@@ -563,34 +563,34 @@ Second migration for this project: `supabase/migrations/20260605000000_workspace
 
 #### Manual
 
-- [x] 2.3 /workspace/members redirects unauthenticated users to /auth/signin
-- [x] 2.4 /workspace/members redirects Members to /dashboard
-- [x] 2.5 Team Lead sees members page with correct Team Lead section
-- [x] 2.6 Submitting invalid email shows client-side validation error
-- [x] 2.7 Submitting valid email inserts workspace_invitation row and shows invite_sent feedback
-- [x] 2.8 Without RESEND_API_KEY invite link is logged to console
-- [x] 2.9 Cancel button deletes invitation row from Studio
-- [x] 2.10 Inviting the same email twice (without cancel) shows duplicate error
+- [x] 2.3 /workspace/members redirects unauthenticated users to /auth/signin — 1724e25
+- [x] 2.4 /workspace/members redirects Members to /dashboard — 1724e25
+- [x] 2.5 Team Lead sees members page with correct Team Lead section — 1724e25
+- [x] 2.6 Submitting invalid email shows client-side validation error — 1724e25
+- [x] 2.7 Submitting valid email inserts workspace_invitation row and shows invite_sent feedback — 1724e25
+- [x] 2.8 Without RESEND_API_KEY invite link is logged to console — 1724e25
+- [x] 2.9 Cancel button deletes invitation row from Studio — 1724e25
+- [x] 2.10 Inviting the same email twice (without cancel) shows duplicate error — 1724e25
 
 ### Phase 3: Accept-invite flow
 
 #### Automated
 
-- [ ] 3.0 FormField readOnly prop added, npm run build passes with no TypeScript errors
-- [ ] 3.1 npm run build passes
-- [ ] 3.2 npm run lint passes
+- [x] 3.0 FormField readOnly prop added, npm run build passes with no TypeScript errors
+- [x] 3.1 npm run build passes
+- [x] 3.2 npm run lint passes
 
 #### Manual
 
-- [ ] 3.3 Invalid token renders expired/used error page
-- [ ] 3.4 Missing token renders invalid invite link error
-- [ ] 3.5 Valid token unauthenticated renders AcceptInviteForm with pre-filled email and workspace name
-- [ ] 3.6 New user signup flow: signup → accept-invite page → Join Workspace → /dashboard as Member
-- [ ] 3.7 workspace_member row and workspace_invitation.accepted_at verified in Studio after join
-- [ ] 3.8 Existing user signin flow: signin → accept-invite page → Join Workspace → /dashboard as Member
-- [ ] 3.9 Wrong account renders mismatch error
-- [ ] 3.10 User already in workspace renders already-member error
-- [ ] 3.11 Already-accepted invite link renders expired/used error
+- [x] 3.3 Invalid token renders expired/used error page
+- [x] 3.4 Missing token renders invalid invite link error
+- [x] 3.5 Valid token unauthenticated renders AcceptInviteForm with pre-filled email and workspace name
+- [x] 3.6 New user signup flow: signup → accept-invite page → Join Workspace → /dashboard as Member
+- [x] 3.7 workspace_member row and workspace_invitation.accepted_at verified in Studio after join
+- [x] 3.8 Existing user signin flow: signin → accept-invite page → Join Workspace → /dashboard as Member
+- [x] 3.9 Wrong account renders mismatch error
+- [x] 3.10 User already in workspace renders already-member error
+- [x] 3.11 Already-accepted invite link renders expired/used error
 
 ### Phase 4: Dashboard navigation
 

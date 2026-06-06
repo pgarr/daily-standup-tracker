@@ -1,0 +1,145 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AcceptInviteForm from "@/components/auth/AcceptInviteForm";
+import { createClient } from "@/lib/supabase";
+
+const token = Astro.url.searchParams.get("token");
+const errorParam = Astro.url.searchParams.get("error");
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+interface InviteRow {
+  invitation_id: string;
+  workspace_id: string;
+  workspace_name: string;
+  email: string;
+  expires_at: string;
+}
+
+let invite: InviteRow | null = null;
+let lookupError: string | null = null;
+
+if (token && supabase) {
+  const { data, error } = await supabase.rpc("get_invitation_by_token", { p_token: token }).maybeSingle();
+  if (error) {
+    lookupError = error.message;
+  } else {
+    invite = data as InviteRow | null;
+  }
+} else if (!token) {
+  // no-op: template renders "Invalid invite link" for !token
+} else {
+  lookupError = "Service unavailable";
+}
+
+const user = Astro.locals.user;
+const workspace = Astro.locals.workspace;
+
+// Determine which authenticated state we're in when the user is logged in
+let authState: "join" | "already_member" | "wrong_account" | null = null;
+if (invite && user) {
+  if (user.email === invite.email) {
+    authState = workspace ? "already_member" : "join";
+  } else {
+    authState = "wrong_account";
+  }
+}
+
+// Map error param from accept endpoint to a human-readable message
+function resolveErrorMessage(err: string | null): string | null {
+  if (!err) return null;
+  if (err === "invite_invalid") return "This invite link has expired or has already been used.";
+  if (err === "already_in_workspace") return "You are already a member of a workspace.";
+  return err;
+}
+
+const displayError = resolveErrorMessage(errorParam);
+---
+
+<Layout title="Accept invite">
+  <div class="bg-cosmic flex min-h-screen items-center justify-center p-4">
+    <div class="w-full max-w-sm rounded-2xl border border-white/10 bg-white/10 p-8 text-white backdrop-blur-xl">
+      {
+        !token || !supabase ? (
+          <div class="text-center">
+            <h1 class="mb-3 text-xl font-bold text-red-300">Invalid invite link</h1>
+            <p class="text-sm text-blue-100/60">
+              This invite link is invalid. Contact your Team Lead for a new invite.
+            </p>
+          </div>
+        ) : lookupError ? (
+          <div class="text-center">
+            <h1 class="mb-3 text-xl font-bold text-red-300">Service error</h1>
+            <p class="text-sm text-blue-100/60">{lookupError}</p>
+          </div>
+        ) : !invite ? (
+          <div class="text-center">
+            <h1 class="mb-3 text-xl font-bold text-red-300">Invite not found</h1>
+            <p class="mb-4 text-sm text-blue-100/60">This invite link has expired or has already been used.</p>
+            <p class="text-xs text-blue-100/40">Contact your Team Lead to request a new invite.</p>
+          </div>
+        ) : authState === "already_member" ? (
+          <div class="text-center">
+            <h1 class="mb-3 text-xl font-bold text-red-300">Already a member</h1>
+            <p class="text-sm text-blue-100/60">You are already a member of a workspace.</p>
+            <a href="/dashboard" class="mt-4 block text-sm text-purple-300 hover:underline">
+              Go to dashboard
+            </a>
+          </div>
+        ) : authState === "wrong_account" ? (
+          <div class="text-center">
+            <h1 class="mb-3 text-xl font-bold text-red-300">Wrong account</h1>
+            <p class="mb-4 text-sm text-blue-100/60">
+              This invite was sent to <span class="font-semibold text-white">{invite.email}</span>. Sign out first if
+              you want to accept it with a different account.
+            </p>
+            <a href="/api/auth/signout" class="text-sm text-purple-300 hover:underline">
+              Sign out
+            </a>
+          </div>
+        ) : authState === "join" ? (
+          <div class="text-center">
+            <h1 class="mb-2 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-2xl font-bold text-transparent">
+              Join {invite.workspace_name}
+            </h1>
+            <p class="mb-6 text-sm text-blue-100/60">
+              You're signed in as {user?.email}. Click below to join the workspace.
+            </p>
+            {displayError && (
+              <p class="mb-4 rounded-lg border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-300">
+                {displayError}
+              </p>
+            )}
+            <form method="POST" action="/api/workspace/accept-invite">
+              <input type="hidden" name="token" value={token} />
+              <button
+                type="submit"
+                class="w-full rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+              >
+                Join {invite.workspace_name}
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div>
+            <h1 class="mb-2 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-center text-2xl font-bold text-transparent">
+              Join {invite.workspace_name}
+            </h1>
+            {displayError && (
+              <p class="mb-4 rounded-lg border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-300">
+                {displayError}
+              </p>
+            )}
+            <AcceptInviteForm
+              workspaceName={invite.workspace_name}
+              inviteEmail={invite.email}
+              token={token}
+              serverError={displayError ?? undefined}
+              client:load
+            />
+          </div>
+        )
+      }
+    </div>
+  </div>
+</Layout>

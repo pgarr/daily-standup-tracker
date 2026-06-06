@@ -5,6 +5,7 @@ export const POST: APIRoute = async (context) => {
   const form = await context.request.formData();
   const email = form.get("email") as string;
   const password = form.get("password") as string;
+  const inviteToken = form.get("invite_token") as string | null;
 
   const supabase = createClient(context.request.headers, context.cookies);
   if (!supabase) {
@@ -16,5 +17,8 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/auth/signin?error=${encodeURIComponent(error.message)}`);
   }
 
+  if (inviteToken) {
+    return context.redirect(`/auth/accept-invite?token=${encodeURIComponent(inviteToken)}`);
+  }
   return context.redirect("/dashboard");
 };

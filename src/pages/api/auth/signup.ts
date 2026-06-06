@@ -17,16 +17,33 @@ export const POST: APIRoute = async (context) => {
   }
 
   const { email, password } = result.data;
+  const inviteToken = form.get("invite_token") as string | null;
 
   const supabase = createClient(context.request.headers, context.cookies);
   if (!supabase) {
     return context.redirect(`/auth/signup?error=${encodeURIComponent("Supabase is not configured")}`);
   }
-  const { error } = await supabase.auth.signUp({ email, password });
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: inviteToken
+      ? {
+          emailRedirectTo: `${context.url.origin}/auth/accept-invite?token=${encodeURIComponent(inviteToken)}`,
+        }
+      : undefined,
+  });
 
   if (error) {
     return context.redirect(`/auth/signup?error=${encodeURIComponent(error.message)}`);
   }
 
+  // data.session is non-null in dev (auto-confirm); null in prod (email confirmation pending).
+  // In both paths, redirect to the accept-invite PAGE — it detects auth state and shows the Join button.
+  if (data.session && inviteToken) {
+    return context.redirect(`/auth/accept-invite?token=${encodeURIComponent(inviteToken)}`);
+  }
+  if (inviteToken) {
+    return context.redirect(`/auth/confirm-email?invite_token=${encodeURIComponent(inviteToken)}`);
+  }
   return context.redirect("/auth/confirm-email");
 };
