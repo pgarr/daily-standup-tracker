@@ -576,21 +576,21 @@ Second migration for this project: `supabase/migrations/20260605000000_workspace
 
 #### Automated
 
-- [x] 3.0 FormField readOnly prop added, npm run build passes with no TypeScript errors
-- [x] 3.1 npm run build passes
-- [x] 3.2 npm run lint passes
+- [x] 3.0 FormField readOnly prop added, npm run build passes with no TypeScript errors — 4096761
+- [x] 3.1 npm run build passes — 4096761
+- [x] 3.2 npm run lint passes — 4096761
 
 #### Manual
 
-- [x] 3.3 Invalid token renders expired/used error page
-- [x] 3.4 Missing token renders invalid invite link error
-- [x] 3.5 Valid token unauthenticated renders AcceptInviteForm with pre-filled email and workspace name
-- [x] 3.6 New user signup flow: signup → accept-invite page → Join Workspace → /dashboard as Member
-- [x] 3.7 workspace_member row and workspace_invitation.accepted_at verified in Studio after join
-- [x] 3.8 Existing user signin flow: signin → accept-invite page → Join Workspace → /dashboard as Member
-- [x] 3.9 Wrong account renders mismatch error
-- [x] 3.10 User already in workspace renders already-member error
-- [x] 3.11 Already-accepted invite link renders expired/used error
+- [x] 3.3 Invalid token renders expired/used error page — 4096761
+- [x] 3.4 Missing token renders invalid invite link error — 4096761
+- [x] 3.5 Valid token unauthenticated renders AcceptInviteForm with pre-filled email and workspace name — 4096761
+- [x] 3.6 New user signup flow: signup → accept-invite page → Join Workspace → /dashboard as Member — 4096761
+- [x] 3.7 workspace_member row and workspace_invitation.accepted_at verified in Studio after join — 4096761
+- [x] 3.8 Existing user signin flow: signin → accept-invite page → Join Workspace → /dashboard as Member — 4096761
+- [x] 3.9 Wrong account renders mismatch error — 4096761
+- [x] 3.10 User already in workspace renders already-member error — 4096761
+- [x] 3.11 Already-accepted invite link renders expired/used error — 4096761
 
 ### Phase 4: Dashboard navigation
 
