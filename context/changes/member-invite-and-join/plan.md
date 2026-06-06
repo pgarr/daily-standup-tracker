@@ -596,10 +596,10 @@ Second migration for this project: `supabase/migrations/20260605000000_workspace
 
 #### Automated
 
-- [ ] 4.1 npm run build passes
-- [ ] 4.2 npm run lint passes
+- [x] 4.1 npm run build passes
+- [x] 4.2 npm run lint passes
 
 #### Manual
 
-- [ ] 4.3 Team Lead sees Members link in Topbar navigating to /workspace/members
-- [ ] 4.4 Member does not see Members link in Topbar
+- [x] 4.3 Team Lead sees Members link in Topbar navigating to /workspace/members
+- [x] 4.4 Member does not see Members link in Topbar
