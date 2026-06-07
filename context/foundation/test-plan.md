@@ -172,10 +172,8 @@ import {
   isSupabaseRunning,   // liveness probe — call this first
   createServiceClient, // bypasses RLS — setup/teardown ONLY
   createUserClient,    // enforces RLS — use for ALL assertions
-  SUPABASE_URL,        // needed only if you call signInWithPassword directly
-  SUPABASE_ANON_KEY,   // needed only if you call signInWithPassword directly
+  createSignInClient,  // sign-in only; has persistSession:false baked in
 } from "./helpers/supabase-test";
-import { createClient } from "@supabase/supabase-js"; // for sign-in client
 ```
 
 #### Skip guard (required)
@@ -224,10 +222,7 @@ beforeAll(async () => {
   //    if RLS hasn't settled yet (see lessons.md: "Use client-generated UUIDs").
 
   // 3. Sign in as the user to get a real JWT for assertions
-  const signInClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: { persistSession: false, autoRefreshToken: false }, // prevents hang after suite exits
-  });
-  const { data: session, error: signInErr } = await signInClient.auth.signInWithPassword({
+  const { data: session, error: signInErr } = await createSignInClient().auth.signInWithPassword({
     email: `rls-test-${ts}@example.com`,
     password: "test-password-123",
   });

@@ -1,12 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { createClient } from "@supabase/supabase-js";
-import {
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY,
-  isSupabaseRunning,
-  createServiceClient,
-  createUserClient,
-} from "./helpers/supabase-test";
+import { isSupabaseRunning, createServiceClient, createUserClient, createSignInClient } from "./helpers/supabase-test";
 
 const supabaseAvailable = await isSupabaseRunning();
 
@@ -69,7 +62,7 @@ describe.skipIf(!supabaseAvailable)(
       workspaceBId = wsBResp.data.id;
 
       // 3. Insert workspace_member rows for both users into workspaceA
-      await svc.from("workspace_member").insert([
+      const { error: wmErr } = await svc.from("workspace_member").insert([
         {
           id: crypto.randomUUID(),
           workspace_id: workspaceAId,
@@ -83,6 +76,7 @@ describe.skipIf(!supabaseAvailable)(
           role: "member",
         },
       ]);
+      if (wmErr) throw new Error(`workspace_member insert: ${wmErr.message}`);
 
       // 4. Insert entryA for User A via service client (auth_user_workspace_id() not available here)
       entryAId = crypto.randomUUID();
@@ -97,9 +91,7 @@ describe.skipIf(!supabaseAvailable)(
       });
 
       // 5. Sign in as each user to get access tokens
-      const signInClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth: { persistSession: false, autoRefreshToken: false },
-      });
+      const signInClient = createSignInClient();
       const { data: sessionA, error: errSA } = await signInClient.auth.signInWithPassword({
         email: `rls-a-${ts}@example.com`,
         password: "test-password-123",
@@ -147,6 +139,7 @@ describe.skipIf(!supabaseAvailable)(
       expect(error?.message).toContain("row-level security");
     });
 
+    // workspaceB is "foreign" because beforeAll never inserted a workspace_member row for User B there.
     it("INSERT with foreign workspace_id rejected", async () => {
       const { error } = await createUserClient(userBToken).from("standup_entries").insert({
         user_id: userBId,

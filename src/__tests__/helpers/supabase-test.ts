@@ -40,3 +40,14 @@ export function createUserClient(accessToken: string) {
     global: { headers: { Authorization: "Bearer " + accessToken } },
   });
 }
+
+/**
+ * Sign-in-only client with safe defaults that prevent Vitest from hanging.
+ * Use this to call signInWithPassword and extract the access_token.
+ * Never use it for assertion queries — it is not JWT-scoped per user.
+ */
+export function createSignInClient() {
+  return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
