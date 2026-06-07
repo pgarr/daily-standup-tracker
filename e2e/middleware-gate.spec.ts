@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-// Keep in sync with AUTH_REQUIRED_ROUTES + WORKSPACE_REQUIRED_ROUTES in src/lib/routes.ts.
+// Routes that AUTH_REQUIRED_ROUTES or WORKSPACE_REQUIRED_ROUTES protect (see src/lib/routes.ts).
 // Route-coverage.test.ts is the canonical gate for ungated routes; this list covers
 // specific HTTP-level behaviour only.
 const PROTECTED_ROUTES = ["/dashboard", "/workspace/setup"];

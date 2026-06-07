@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { isNextBusinessDay, shouldSuggestBlockerMatch } from "@/lib/blocker";
 
-// Skip until S-04 ships the real implementation (src/lib/blocker.ts stubs throw)
+// TODO(s-04-blocker-detection): remove this skip guard when S-04 ships the real implementation
 const implemented = (() => {
   try {
     isNextBusinessDay(new Date("2026-06-01"), new Date("2026-06-02"));

@@ -2,6 +2,8 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./e2e",
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 1 : 0,
   projects: [
     // API-only project — no browser needed for request-context tests.
     // Add a chromium project in Phase 4 when browser-driven tests are introduced.
