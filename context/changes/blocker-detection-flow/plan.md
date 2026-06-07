@@ -167,7 +167,6 @@ server-side only (no client bundle impact).
 
 - `npx supabase db reset` completes without error; `blocker_alerts` table visible in Supabase Studio
 - `astro.config.mjs` env schema shows `ANTHROPIC_API_KEY` alongside existing secrets
-- `npm run build` succeeds; no new type errors
 
 ---
 
@@ -276,7 +275,7 @@ membership, then upsert a `blocker_alerts` row with `status: 'confirmed'`. Redir
 - `export const prerender = false`
 - Validate `trigger_date` with `z.string().regex(/^\d{4}-\d{2}-\d{2}$/)` via zod
 - Fetch `workspace_id` from `workspace_member` (same pattern as `submit.ts:42–46`)
-- Upsert: `supabase.from("blocker_alerts").upsert({ workspace_id, user_id, trigger_date, status: "confirmed" }, { onConflict: "user_id,trigger_date" })`
+- Upsert: `supabase.from("blocker_alerts").upsert({ workspace_id, user_id, trigger_date, status: "confirmed" }, { onConflict: "user_id,trigger_date", ignoreDuplicates: true })`
 - Always redirect to `/dashboard`
 
 #### 3. Dismiss route
@@ -286,7 +285,7 @@ membership, then upsert a `blocker_alerts` row with `status: 'confirmed'`. Redir
 **Intent**: Same as confirm route but writes `status: 'dismissed'`. Identical shape; only
 `status` value differs.
 
-**Contract**: Same structure as `confirm.ts`; `status: "dismissed"` in the upsert payload.
+**Contract**: Same structure as `confirm.ts`; `status: "dismissed"` in the upsert payload; same `{ onConflict: "user_id,trigger_date", ignoreDuplicates: true }` options.
 
 ### Success Criteria
 
