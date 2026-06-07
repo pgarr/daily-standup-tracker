@@ -71,18 +71,19 @@ export function isNextBusinessDay(prev: Date, next: Date): boolean
 ### `shouldSuggestBlockerMatch` — export from `src/lib/blocker.ts` (S-04)
 
 ```typescript
-export function shouldSuggestBlockerMatch(
+export async function shouldSuggestBlockerMatch(
   entries: readonly { submitted_date: string; blockers: string | null }[],
   // Sorted descending (newest first). Only submitted_date and blockers consumed.
   threshold: number,
   // From workspace.alert_threshold. Number of consecutive business days required.
-  similarityFn: (a: string, b: string) => boolean,
-  // Injected; tests pass () => true or () => false stubs.
-): boolean
+  similarityFn: (a: string, b: string) => Promise<boolean>,
+  // Injected; tests pass async () => true or async () => false stubs.
+): Promise<boolean>
 // Returns true if the (threshold) most recent entries form threshold consecutive
 // business days AND each consecutive pair has non-null/non-empty blockers that
 // similarityFn returns true for. Returns false if any entry has a null or empty
 // blockers field.
+// NOTE: async because S-04 wires Claude Haiku as the similarity mechanism.
 ```
 
 ---
