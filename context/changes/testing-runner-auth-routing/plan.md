@@ -361,4 +361,4 @@ Rule: no Vitest test may import a module that transitively depends on `astro:env
 
 #### Manual
 
-- [ ] 3.2 Comment out one Playwright assertion, push to branch, confirm CI fails on playwright step (not build step); revert
+- [x] 3.2 Comment out one Playwright assertion, push to branch, confirm CI fails on playwright step (not build step); revert
