@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-06-05 (updated §2 risks + §3 phases for PRD v3 + Roadmap v2)
+> Last updated: 2026-06-07 (§3 Phase 2 status + change folder; §4 Playwright CI/Supabase strategy; §5 E2E gate clarification; §8 freshness)
 
 ---
 
@@ -74,7 +74,7 @@ orchestrator updates Status and Change folder as artifacts appear on disk.
 | # | Phase name | Goal | Risks covered | Test types | Status | Change folder |
 |---|---|---|---|---|---|---|
 | 1 | Runner + auth/routing protection | Bootstrap Vitest; prove middleware correctly gates unauthenticated requests; protect against new-route-gap regression | #1 | integration (HTTP/middleware) | implementing | context/changes/testing-runner-auth-routing/ |
-| 2 | Standup data isolation | Prove standup_entries RLS enforces absolute horizontal isolation under a real Member JWT; document the service-role trap | #2 | integration (local Supabase, real JWT) | not started | — |
+| 2 | Standup data isolation | Prove standup_entries RLS enforces absolute horizontal isolation under a real Member JWT; document the service-role trap | #2 | integration (local Supabase, real JWT) | planned | context/changes/test-standup-data-isolation/ |
 | 3 | Domain logic — streak + blocker | Unit tests for business-day streak boundary and blocker alert firing logic (Phase 3.1: streak tests, gates on S-03; Phase 3.2: blocker tests, gates on S-04) | #4, #5 | unit | planned | context/changes/test-phase-3/ |
 | 4 | Security — role gating + invite | Prove team feed rejects Members; prove invite token replay is rejected and is email-bound | #3, #6 | integration | not started | — |
 | 5 | Entry mutation integrity | Prove edit/delete correctly recalculates streak; prove confirmed alert is not orphaned on entry deletion; prove write-path IDOR is rejected by RLS (extends Phase 2 scope) | #7 (write-path IDOR component of #2 also tested here) | integration | not started | — |
@@ -106,8 +106,8 @@ The classic test base for this project. No test runner is installed yet — Phas
 | Layer | Tool | Notes |
 |---|---|---|
 | Unit + integration | Vitest — checked: 2026-06-05 | None yet — Phase 1 installs and wires it. Compatible with the project's Vite 7 setup. |
-| Supabase RLS integration | Vitest + `@supabase/supabase-js` (already installed) + local Supabase CLI (`supabase` in devDeps) — checked: 2026-06-05 | Local Supabase already wired; Phase 2 adds per-role JWT fixtures for RLS tests. |
-| e2e | Playwright — checked: 2026-06-05 | None yet — Phase 1 adds Playwright for middleware routing smoke tests. |
+| Supabase RLS integration | Vitest + `@supabase/supabase-js` (already installed) + local Supabase CLI (`supabase` in devDeps) — checked: 2026-06-07 | Phase 2 adds per-role JWT fixtures for RLS tests. Tests carry a **skip guard** — when `supabase start` is not running the suite exits 0 with a skip notice, so `npm test` stays green in CI today. Adding `supabase start` to CI is deferred: technically feasible (Docker available on ubuntu-latest, ~90 s startup, ~4-6 GB of the runner's 7 GB RAM, anon key is deterministic), but not in Phase 2 scope. Address when Phase 2 is complete. |
+| e2e | Playwright — checked: 2026-06-07 | Phase 1 adds Playwright for middleware routing smoke tests using HTTP `request` context only — no browser binary install needed, no Supabase credentials required. Runs in CI without `supabase start`. Full browser E2E (login form → standup submission) is not yet defined; when it is, it will need `supabase start` in CI and a `webServer` entry in `playwright.config.ts`. |
 | API mocking | MSW — checked: 2026-06-05 | None yet — Phase 1 evaluates whether MSW is needed for Cloudflare Worker integration tests or if Playwright HTTP can substitute. |
 
 **Stack grounding tools (current session):**
@@ -126,7 +126,9 @@ The full set of gates that must pass before a change reaches production.
 |---|---|---|---|
 | lint + typecheck (`npm run lint && npm run build`) | local + CI | required now | syntactic/type drift; already wired in CI (`.github/workflows/ci.yml`) |
 | unit + integration | local + CI | required after §3 Phase 1 | logic regressions, RLS policy gaps, middleware routing regressions |
-| e2e on critical flows (auth routing, standup submission) | CI on PR | required after §3 Phase 1 | broken critical user paths that unit/integration tests cannot reach |
+| e2e — auth routing (Playwright HTTP, no Supabase) | CI on PR | required after §3 Phase 1 | broken middleware gate; new unprotected routes |
+| e2e — Supabase integration tests (`npm test` with skip guard) | local; CI pending `supabase start` step | required after §3 Phase 2 completes | RLS policy gaps invisible to HTTP-layer tests |
+| e2e — full browser flows (login → standup submission) | CI on PR (future) | not yet defined | broken critical user paths requiring a real browser + Supabase | 
 | post-edit hook | local (agent loop) | recommended after §3 Phase 1 | regressions at edit time before commit |
 | pre-prod smoke | between merge + prod | optional | environment-specific failures (Cloudflare Worker binding, Supabase remote connection) |
 
@@ -185,9 +187,10 @@ Exclusions agreed during the rollout (Phase 2 interview, Q5 and project context)
 
 ## 8. Freshness Ledger
 
-- Strategy (§1–§5) last reviewed: 2026-06-05 (§2 updated for PRD v3 + Roadmap v2)
+- Strategy (§1–§5) last reviewed: 2026-06-07 (§3 Phase 2 status; §4 Playwright + Supabase CI strategy; §5 E2E gate split)
 - Source documents: PRD v3 (`context/foundation/prd-v3.md`), Roadmap v2 (`context/foundation/roadmap.md` updated 2026-06-05)
-- Stack versions last verified: 2026-06-05
+- Stack versions last verified: 2026-06-07
+- CI/E2E strategy last verified: 2026-06-07 — see `context/changes/test-plan-refresh-2026-06-07/research.md`
 - AI-native tool references last verified: N/A — no AI-native test layer planned for current rollout
 
 Refresh (`/10x-test-plan --refresh`) when:

@@ -343,13 +343,13 @@ Rule: no Vitest test may import a module that transitively depends on `astro:env
 
 #### Automated
 
-- [ ] 2.1 `npx playwright test` exits 0 (all protected routes 302, all public routes non-302)
-- [ ] 2.2 `npm run lint` passes with new config + spec in place
+- [x] 2.1 `npx playwright test` exits 0 (all protected routes 302, all public routes non-302)
+- [x] 2.2 `npm run lint` passes with new config + spec in place
 
 #### Manual
 
-- [ ] 2.3 `playwright test --reporter=list` output is legible (test names + routes visible)
-- [ ] 2.4 Remove `/dashboard` from `AUTH_REQUIRED_ROUTES`, run `playwright test`, confirm failure; revert
+- [x] 2.3 `playwright test --reporter=list` output is legible (test names + routes visible)
+- [x] 2.4 Remove `/dashboard` from `AUTH_REQUIRED_ROUTES`, run `playwright test`, confirm failure; revert
 
 ---
 
