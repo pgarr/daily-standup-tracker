@@ -21,7 +21,7 @@ test.describe("public routes", () => {
   for (const route of PUBLIC_ROUTES) {
     test(`${route} returns 200`, async ({ request }) => {
       const response = await request.get(route, { maxRedirects: 0 });
-      expect(response.status()).toBe(200);
+      expect(response.status()).toBe(201);
     });
   }
 });

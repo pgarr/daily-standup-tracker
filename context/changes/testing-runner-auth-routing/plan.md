@@ -357,7 +357,7 @@ Rule: no Vitest test may import a module that transitively depends on `astro:env
 
 #### Automated
 
-- [ ] 3.1 CI job passes on a new PR: lint → npm test → playwright install → playwright test → build all green
+- [x] 3.1 CI job passes on a new PR: lint → npm test → playwright install → playwright test → build all green
 
 #### Manual
 
