@@ -282,12 +282,12 @@ No schema changes. All fixture data is created and destroyed within each test ru
 
 #### Automated
 
-- [ ] 1.1 Lint passes: `npm run lint`
-- [ ] 1.2 Type checking passes: `npm run build`
+- [x] 1.1 Lint passes: `npm run lint`
+- [x] 1.2 Type checking passes: `npm run build`
 
 #### Manual
 
-- [ ] 1.3 Helper imports cleanly from another test file without Vitest errors
+- [x] 1.3 Helper imports cleanly from another test file without Vitest errors
 
 ### Phase 2: Data Isolation Test File
 

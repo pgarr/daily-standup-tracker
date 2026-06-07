@@ -1,9 +1,9 @@
 ---
 change_id: test-standup-data-isolation
 title: Test standup data isolation
-status: plan_reviewed
+status: implementing
 created: 2026-06-06
-updated: 2026-06-06
+updated: 2026-06-07
 archived_at: null
 ---
 
