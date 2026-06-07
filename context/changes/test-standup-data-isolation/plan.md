@@ -282,26 +282,26 @@ No schema changes. All fixture data is created and destroyed within each test ru
 
 #### Automated
 
-- [x] 1.1 Lint passes: `npm run lint`
-- [x] 1.2 Type checking passes: `npm run build`
+- [x] 1.1 Lint passes: `npm run lint` — 4cc71b2
+- [x] 1.2 Type checking passes: `npm run build` — 4cc71b2
 
 #### Manual
 
-- [x] 1.3 Helper imports cleanly from another test file without Vitest errors
+- [x] 1.3 Helper imports cleanly from another test file without Vitest errors — 4cc71b2
 
 ### Phase 2: Data Isolation Test File
 
 #### Automated
 
-- [ ] 2.1 All 5 tests pass with local Supabase running: `npm test`
-- [ ] 2.2 Suite is skipped (not failed) when Supabase is not running: `npm test` exits 0 with skip notice
-- [ ] 2.3 Lint passes: `npm run lint`
+- [x] 2.1 All 5 tests pass with local Supabase running: `npm test`
+- [x] 2.2 Suite is skipped (not failed) when Supabase is not running: `npm test` exits 0 with skip notice
+- [x] 2.3 Lint passes: `npm run lint`
 
 #### Manual
 
-- [ ] 2.4 Run with `npx supabase start` active — confirm 5 green tests in output
-- [ ] 2.5 Stop Supabase, re-run — confirm suite skipped, overall run green
-- [ ] 2.6 Confidence check: service-role swap produces false-green, confirming RLS is actually being exercised
+- [x] 2.4 Run with `npx supabase start` active — confirm 5 green tests in output
+- [x] 2.5 Stop Supabase, re-run — confirm suite skipped, overall run green
+- [x] 2.6 Confidence check: service-role swap produces false-green, confirming RLS is actually being exercised
 
 ### Phase 3: test-plan.md §6.3
 

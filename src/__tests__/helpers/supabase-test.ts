@@ -6,11 +6,10 @@ export const SUPABASE_URL = process.env.TEST_SUPABASE_URL ?? "http://127.0.0.1:5
 
 export const SUPABASE_ANON_KEY = process.env.TEST_SUPABASE_ANON_KEY ?? "sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH";
 
-// Traditional local Supabase CLI service_role JWT (signed with the default local secret).
-// Run `npx supabase status` to confirm or override via TEST_SUPABASE_SERVICE_KEY.
+// Local Supabase CLI secret key (run `npx supabase status` to confirm for your instance).
+// Override via TEST_SUPABASE_SERVICE_KEY if your local key differs.
 export const SUPABASE_SERVICE_KEY =
-  process.env.TEST_SUPABASE_SERVICE_KEY ??
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hj04zWl196z2-SBc0";
+  process.env.TEST_SUPABASE_SERVICE_KEY ?? "sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz";
 
 /** Probe the local REST API. Returns false (never throws) on any connection failure. */
 export async function isSupabaseRunning(): Promise<boolean> {
