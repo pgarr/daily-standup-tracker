@@ -307,4 +307,4 @@ No schema changes. All fixture data is created and destroyed within each test ru
 
 #### Manual
 
-- [x] 3.1 §6.3 is self-sufficient — new RLS test can be added without reading the standup test file
+- [x] 3.1 §6.3 is self-sufficient — new RLS test can be added without reading the standup test file — 29900aa
