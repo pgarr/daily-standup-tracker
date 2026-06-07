@@ -159,7 +159,108 @@ TBD — see §3 Phase 1 (runner bootstrap sub-phase will document how to add a r
 
 ### 6.3 Adding an integration test for a Supabase RLS policy
 
-TBD — see §3 Phase 2 (data isolation sub-phase will document how to issue a query as a specific role using a real JWT, the fixture setup for local Supabase, and the pattern for proving a policy rejects cross-member reads).
+**When to use this pattern**: any time you need to prove that a row-level security policy actually enforces isolation — SELECT invisibility, INSERT rejection, or UPDATE/DELETE rejection under a real authenticated user session.
+
+**Reference test**: `src/__tests__/standup-data-isolation.test.ts` — five tests covering the full `standup_entries` RLS surface. Read it alongside this entry.
+
+**Run command**: `npm test` (Vitest). Tests skip automatically when local Supabase is not running; the overall run stays green.
+
+#### Imports
+
+```typescript
+import {
+  isSupabaseRunning,   // liveness probe — call this first
+  createServiceClient, // bypasses RLS — setup/teardown ONLY
+  createUserClient,    // enforces RLS — use for ALL assertions
+  SUPABASE_URL,        // needed only if you call signInWithPassword directly
+  SUPABASE_ANON_KEY,   // needed only if you call signInWithPassword directly
+} from "./helpers/supabase-test";
+import { createClient } from "@supabase/supabase-js"; // for sign-in client
+```
+
+#### Skip guard (required)
+
+```typescript
+const supabaseAvailable = await isSupabaseRunning(); // top-level await — ESM supported
+
+describe.skipIf(!supabaseAvailable)(
+  "my table RLS (local Supabase not running — run npx supabase start)",
+  () => { ... }
+);
+```
+
+`isSupabaseRunning()` probes `SUPABASE_URL/rest/v1/` and returns `false` (never throws) on any connection failure. The suite is skipped, not failed, so `npm test` exits 0 in CI.
+
+#### Two client roles — never mix them
+
+| Client | How to create | When to use |
+|---|---|---|
+| **Service-role** (bypasses RLS) | `createServiceClient()` | `beforeAll`/`afterAll` only — creates auth users, workspace rows, fixture data, then cleans up |
+| **User JWT** (enforces RLS) | `createUserClient(accessToken)` | ALL test assertions — the only client that reflects what a real user actually sees |
+
+**Anti-pattern**: never use `createServiceClient()` in an assertion query. It bypasses RLS and produces false-green results. To confirm your test is actually exercising RLS: swap the user client for the service client in one assertion — if it now returns data it shouldn't (e.g. `data.length === 1` where the RLS test expects 0), the policy is real.
+
+#### Fixture lifecycle
+
+```typescript
+let userId = "";
+let accessToken = "";
+
+beforeAll(async () => {
+  const svc = createServiceClient();
+  const ts = Date.now();
+
+  // 1. Create the test user (service-role for admin.createUser)
+  const { data: authData, error: createErr } = await svc.auth.admin.createUser({
+    email: `rls-test-${ts}@example.com`,
+    password: "test-password-123",
+    email_confirm: true,
+  });
+  if (!authData.user) throw new Error(`createUser: ${createErr?.message ?? "unknown"}`);
+  userId = authData.user.id;
+
+  // 2. Seed any related rows (workspace, workspace_member, etc.) using service client.
+  //    Use crypto.randomUUID() for IDs — avoids SELECT round-trips that can fail
+  //    if RLS hasn't settled yet (see lessons.md: "Use client-generated UUIDs").
+
+  // 3. Sign in as the user to get a real JWT for assertions
+  const signInClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false }, // prevents hang after suite exits
+  });
+  const { data: session, error: signInErr } = await signInClient.auth.signInWithPassword({
+    email: `rls-test-${ts}@example.com`,
+    password: "test-password-123",
+  });
+  if (!session.session) throw new Error(`signIn: ${signInErr?.message ?? "unknown"}`);
+  accessToken = session.session.access_token;
+});
+
+afterAll(async () => {
+  const svc = createServiceClient();
+  // Delete workspace rows first; CASCADE removes child rows.
+  if (userId) await svc.auth.admin.deleteUser(userId);
+});
+```
+
+#### Assertion patterns
+
+```typescript
+// SELECT invisibility (RLS hides the row — no error, just empty results)
+const { data, error } = await createUserClient(accessToken)
+  .from("some_table")
+  .select("*");
+expect(error).toBeNull();
+expect(data).toHaveLength(0);
+
+// INSERT rejection (RLS policy WITH CHECK fails — PostgreSQL error 42501)
+const { error: insertErr } = await createUserClient(accessToken)
+  .from("some_table")
+  .insert({ user_id: otherUserId, ... });
+expect(insertErr?.code).toBe("42501");
+expect(insertErr?.message).toContain("row-level security");
+```
+
+`42501` is PostgreSQL's `insufficient_privilege` SQLSTATE — PostgREST passes it through unchanged. The `message` assertion survives minor PostgREST version variation and provides a clearer failure description.
 
 ### 6.4 Adding a test for a new protected API endpoint
 

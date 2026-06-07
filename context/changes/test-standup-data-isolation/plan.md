@@ -293,18 +293,18 @@ No schema changes. All fixture data is created and destroyed within each test ru
 
 #### Automated
 
-- [x] 2.1 All 5 tests pass with local Supabase running: `npm test`
-- [x] 2.2 Suite is skipped (not failed) when Supabase is not running: `npm test` exits 0 with skip notice
-- [x] 2.3 Lint passes: `npm run lint`
+- [x] 2.1 All 5 tests pass with local Supabase running: `npm test` — 963c72e
+- [x] 2.2 Suite is skipped (not failed) when Supabase is not running: `npm test` exits 0 with skip notice — 963c72e
+- [x] 2.3 Lint passes: `npm run lint` — 963c72e
 
 #### Manual
 
-- [x] 2.4 Run with `npx supabase start` active — confirm 5 green tests in output
-- [x] 2.5 Stop Supabase, re-run — confirm suite skipped, overall run green
-- [x] 2.6 Confidence check: service-role swap produces false-green, confirming RLS is actually being exercised
+- [x] 2.4 Run with `npx supabase start` active — confirm 5 green tests in output — 963c72e
+- [x] 2.5 Stop Supabase, re-run — confirm suite skipped, overall run green — 963c72e
+- [x] 2.6 Confidence check: service-role swap produces false-green, confirming RLS is actually being exercised — 963c72e
 
 ### Phase 3: test-plan.md §6.3
 
 #### Manual
 
-- [ ] 3.1 §6.3 is self-sufficient — new RLS test can be added without reading the standup test file
+- [x] 3.1 §6.3 is self-sufficient — new RLS test can be added without reading the standup test file
