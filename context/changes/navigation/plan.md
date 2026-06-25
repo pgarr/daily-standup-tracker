@@ -247,13 +247,13 @@ Switch `workspace/members.astro` to `AppLayout` and remove its outer cosmic wrap
 
 #### Automated
 
-- [x] 3.1 `npm run lint` passes
-- [x] 3.2 `npm run build` succeeds
+- [x] 3.1 `npm run lint` passes — 34e394d
+- [x] 3.2 `npm run build` succeeds — 34e394d
 
 #### Manual
 
-- [x] 3.3 Topbar appears on `/workspace/members`
-- [x] 3.4 Clicking Dashboard in Topbar from members page navigates to `/dashboard`
-- [x] 3.5 Sign out from members page works
-- [x] 3.6 Members page header unchanged (workspace name + subtitle)
-- [x] 3.7 `/workspace/setup` shows no Topbar
+- [x] 3.3 Topbar appears on `/workspace/members` — 34e394d
+- [x] 3.4 Clicking Dashboard in Topbar from members page navigates to `/dashboard` — 34e394d
+- [x] 3.5 Sign out from members page works — 34e394d
+- [x] 3.6 Members page header unchanged (workspace name + subtitle) — 34e394d
+- [x] 3.7 `/workspace/setup` shows no Topbar — 34e394d
