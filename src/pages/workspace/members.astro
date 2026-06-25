@@ -1,5 +1,5 @@
 ---
-import Layout from "@/layouts/Layout.astro";
+import AppLayout from "@/layouts/AppLayout.astro";
 import { createClient } from "@/lib/supabase";
 import InviteForm from "@/components/workspace/InviteForm";
 import type { WorkspaceInvitation } from "@/types";
@@ -43,8 +43,8 @@ const error = Astro.url.searchParams.get("error");
 const emailWarning = Astro.url.searchParams.get("email_warning");
 ---
 
-<Layout title="Members">
-  <div class="bg-cosmic min-h-screen p-4 md:p-8">
+<AppLayout title="Members">
+  <div class="p-4 md:p-8">
     <div class="mx-auto max-w-2xl space-y-6">
       <!-- Header -->
       <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl">
@@ -167,4 +167,4 @@ const emailWarning = Astro.url.searchParams.get("email_warning");
       </div>
     </div>
   </div>
-</Layout>
+</AppLayout>

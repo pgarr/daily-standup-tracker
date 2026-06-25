@@ -228,32 +228,32 @@ Switch `workspace/members.astro` to `AppLayout` and remove its outer cosmic wrap
 
 #### Automated
 
-- [x] 2.1 `npm run lint` passes
-- [x] 2.2 `npm run build` succeeds
+- [x] 2.1 `npm run lint` passes — 465c981
+- [x] 2.2 `npm run build` succeeds — 465c981
 
 #### Manual
 
-- [x] 2.3 Topbar appears at the top of `/dashboard` with cosmic styling
-- [x] 2.4 Topbar shows user email + Dashboard + Members (team_lead) + Sign out
-- [x] 2.5 Dashboard inline header shows workspace name, role badge, user email — no sign-out, no Members link
-- [x] 2.6 Clicking Dashboard in Topbar navigates to `/dashboard`
-- [x] 2.7 Clicking Members in Topbar (team_lead) navigates to `/workspace/members`
-- [x] 2.8 Clicking Sign out in Topbar signs out and redirects to `/auth/signin`
-- [x] 2.9 Auth pages (`/auth/signin`, `/auth/signup`) show no Topbar
-- [x] 2.10 Landing page (`/`) is visually unchanged
-- [x] 2.11 Topbar spacing correct at mobile viewport — no flush edge, consistent gap between Topbar and content
+- [x] 2.3 Topbar appears at the top of `/dashboard` with cosmic styling — 465c981
+- [x] 2.4 Topbar shows user email + Dashboard + Members (team_lead) + Sign out — 465c981
+- [x] 2.5 Dashboard inline header shows workspace name, role badge, user email — no sign-out, no Members link — 465c981
+- [x] 2.6 Clicking Dashboard in Topbar navigates to `/dashboard` — 465c981
+- [x] 2.7 Clicking Members in Topbar (team_lead) navigates to `/workspace/members` — 465c981
+- [x] 2.8 Clicking Sign out in Topbar signs out and redirects to `/auth/signin` — 465c981
+- [x] 2.9 Auth pages (`/auth/signin`, `/auth/signup`) show no Topbar — 465c981
+- [x] 2.10 Landing page (`/`) is visually unchanged — 465c981
+- [x] 2.11 Topbar spacing correct at mobile viewport — no flush edge, consistent gap between Topbar and content — 465c981
 
 ### Phase 3: Migrate workspace/members.astro to AppLayout
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` passes
-- [ ] 3.2 `npm run build` succeeds
+- [x] 3.1 `npm run lint` passes
+- [x] 3.2 `npm run build` succeeds
 
 #### Manual
 
-- [ ] 3.3 Topbar appears on `/workspace/members`
-- [ ] 3.4 Clicking Dashboard in Topbar from members page navigates to `/dashboard`
-- [ ] 3.5 Sign out from members page works
-- [ ] 3.6 Members page header unchanged (workspace name + subtitle)
-- [ ] 3.7 `/workspace/setup` shows no Topbar
+- [x] 3.3 Topbar appears on `/workspace/members`
+- [x] 3.4 Clicking Dashboard in Topbar from members page navigates to `/dashboard`
+- [x] 3.5 Sign out from members page works
+- [x] 3.6 Members page header unchanged (workspace name + subtitle)
+- [x] 3.7 `/workspace/setup` shows no Topbar
