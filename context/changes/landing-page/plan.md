@@ -213,11 +213,11 @@ if (context.locals.user && pathname === "/") {
 
 #### Automated
 
-- [x] 2.1 Lint passes: `npm run lint`
-- [x] 2.2 Production build succeeds: `npm run build`
+- [x] 2.1 Lint passes: `npm run lint` — a20dea5
+- [x] 2.2 Production build succeeds: `npm run build` — a20dea5
 
 #### Manual
 
-- [x] 2.3 Authenticated user navigating to `/` is redirected to `/dashboard`
-- [x] 2.4 Unauthenticated user stays on `/`
-- [x] 2.5 Authenticated user with no workspace: `/` → `/dashboard` → `/workspace/setup`
+- [x] 2.3 Authenticated user navigating to `/` is redirected to `/dashboard` — a20dea5
+- [x] 2.4 Unauthenticated user stays on `/` — a20dea5
+- [x] 2.5 Authenticated user with no workspace: `/` → `/dashboard` → `/workspace/setup` — a20dea5
