@@ -34,8 +34,12 @@ const [acceptedResult, openResult] = await Promise.all([
     .order("created_at", { ascending: false }),
 ]);
 
-const acceptedInvitations = (acceptedResult.data ?? []) as WorkspaceInvitation[];
-const openInvitations = (openResult.data ?? []) as WorkspaceInvitation[];
+if (acceptedResult.error || openResult.error) {
+  return Astro.redirect(`/workspace/members?error=${encodeURIComponent("Failed to load members. Please try again.")}`);
+}
+
+const acceptedInvitations = acceptedResult.data as WorkspaceInvitation[];
+const openInvitations = openResult.data as WorkspaceInvitation[];
 const now = new Date();
 
 const success = Astro.url.searchParams.get("success");

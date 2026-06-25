@@ -11,19 +11,24 @@ const role = workspaceMember?.role === "team_lead" ? "Team Lead" : (workspaceMem
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 let recentEntries: StandupEntry[] = [];
 let todayEntry: StandupEntry | null = null;
+let loadError: string | null = null;
 
 if (!user) return Astro.redirect("/auth/signin");
 
 if (supabase) {
   const today = new Date().toISOString().slice(0, 10);
-  const { data } = await supabase
+  const { data, error: queryError } = await supabase
     .from("standup_entries")
     .select("*")
     .eq("user_id", user.id)
     .order("submitted_date", { ascending: false })
     .limit(60);
-  recentEntries = (data ?? []) as StandupEntry[];
-  todayEntry = recentEntries.find((e) => e.submitted_date === today) ?? null;
+  if (queryError) {
+    loadError = "Failed to load standup entries. Please try refreshing.";
+  } else {
+    recentEntries = data as StandupEntry[];
+    todayEntry = recentEntries.find((e) => e.submitted_date === today) ?? null;
+  }
 }
 
 const streak = calculateStreak(recentEntries);
@@ -51,6 +56,14 @@ const submitError = Astro.url.searchParams.get("error");
     </header>
 
     <main class="mx-auto mt-6 max-w-2xl space-y-6">
+      {
+        loadError && (
+          <div class="rounded-xl border border-red-500/30 bg-red-900/30 px-4 py-3 text-sm text-red-300">
+            {loadError}
+          </div>
+        )
+      }
+
       <!-- Streak badge -->
       {
         streak > 0 && (

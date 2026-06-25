@@ -36,3 +36,10 @@
 - **Problem**: Issue stays Open after work is merged — gives a misleading picture of project state in the tracker.
 - **Rule**: Close the linked GitHub issue when a change's impl-review is complete and work is merged. Update the issue's Status field before closing.
 - **Applies to**: implement, impl-review
+
+## POST form endpoints must validate Origin or Referer header
+
+- **Context**: POST API endpoints under `src/pages/api/` that handle HTML form submissions (e.g. `src/pages/api/workspace/invite-cancel.ts`).
+- **Problem**: Without an explicit Origin/Referer check, CSRF safety relies on Supabase cookie `SameSite=Lax` defaults. If cookie configuration ever changes to `SameSite=None` (e.g. for an embedded context), cross-site POSTs become exploitable. Hit during navigation impl-review (F4).
+- **Rule**: Every POST endpoint that accepts form submissions must check the `Origin` or `Referer` header against the app's own origin (`context.url.origin`) at the top of the handler. Return 403 on mismatch. Pattern: parse the header with `new URL(...)` and compare `.origin` fields. Absence of the header is permissive (may be a direct API call).
+- **Applies to**: plan, plan-review, implement, impl-review
