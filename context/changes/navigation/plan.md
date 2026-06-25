@@ -217,31 +217,31 @@ Switch `workspace/members.astro` to `AppLayout` and remove its outer cosmic wrap
 
 #### Automated
 
-- [x] 1.1 `npm run lint` passes with no errors on the new file
-- [x] 1.2 `npm run build` succeeds (no TypeScript errors, no import resolution errors)
+- [x] 1.1 `npm run lint` passes with no errors on the new file — f53f029
+- [x] 1.2 `npm run build` succeeds (no TypeScript errors, no import resolution errors) — f53f029
 
 #### Manual
 
-- [x] 1.3 No visible change on any page — AppLayout created but not yet used
+- [x] 1.3 No visible change on any page — AppLayout created but not yet used — f53f029
 
 ### Phase 2: Migrate dashboard.astro to AppLayout
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` passes
-- [ ] 2.2 `npm run build` succeeds
+- [x] 2.1 `npm run lint` passes
+- [x] 2.2 `npm run build` succeeds
 
 #### Manual
 
-- [ ] 2.3 Topbar appears at the top of `/dashboard` with cosmic styling
-- [ ] 2.4 Topbar shows user email + Dashboard + Members (team_lead) + Sign out
-- [ ] 2.5 Dashboard inline header shows workspace name, role badge, user email — no sign-out, no Members link
-- [ ] 2.6 Clicking Dashboard in Topbar navigates to `/dashboard`
-- [ ] 2.7 Clicking Members in Topbar (team_lead) navigates to `/workspace/members`
-- [ ] 2.8 Clicking Sign out in Topbar signs out and redirects to `/auth/signin`
-- [ ] 2.9 Auth pages (`/auth/signin`, `/auth/signup`) show no Topbar
-- [ ] 2.10 Landing page (`/`) is visually unchanged
-- [ ] 2.11 Topbar spacing correct at mobile viewport — no flush edge, consistent gap between Topbar and content
+- [x] 2.3 Topbar appears at the top of `/dashboard` with cosmic styling
+- [x] 2.4 Topbar shows user email + Dashboard + Members (team_lead) + Sign out
+- [x] 2.5 Dashboard inline header shows workspace name, role badge, user email — no sign-out, no Members link
+- [x] 2.6 Clicking Dashboard in Topbar navigates to `/dashboard`
+- [x] 2.7 Clicking Members in Topbar (team_lead) navigates to `/workspace/members`
+- [x] 2.8 Clicking Sign out in Topbar signs out and redirects to `/auth/signin`
+- [x] 2.9 Auth pages (`/auth/signin`, `/auth/signup`) show no Topbar
+- [x] 2.10 Landing page (`/`) is visually unchanged
+- [x] 2.11 Topbar spacing correct at mobile viewport — no flush edge, consistent gap between Topbar and content
 
 ### Phase 3: Migrate workspace/members.astro to AppLayout
 
