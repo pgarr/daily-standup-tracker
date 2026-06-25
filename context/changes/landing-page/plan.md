@@ -200,24 +200,24 @@ if (context.locals.user && pathname === "/") {
 
 #### Automated
 
-- [x] 1.1 Lint passes: `npm run lint`
-- [x] 1.2 Production build succeeds: `npm run build`
+- [x] 1.1 Lint passes: `npm run lint` — d97bd74
+- [x] 1.2 Production build succeeds: `npm run build` — d97bd74
 
 #### Manual
 
-- [x] 1.3 Visit `/` as guest: correct heading, subtitle, CTAs, no feature cards
-- [x] 1.4 Browser tab shows "Daily Standup Tracker" (not "10x Astro Starter")
-- [x] 1.5 Page renders correctly on mobile viewport (375 px)
+- [x] 1.3 Visit `/` as guest: correct heading, subtitle, CTAs, no feature cards — d97bd74
+- [x] 1.4 Browser tab shows "Daily Standup Tracker" (not "10x Astro Starter") — d97bd74
+- [x] 1.5 Page renders correctly on mobile viewport (375 px) — d97bd74
 
 ### Phase 2: Add Auth Redirect in Middleware
 
 #### Automated
 
-- [ ] 2.1 Lint passes: `npm run lint`
-- [ ] 2.2 Production build succeeds: `npm run build`
+- [x] 2.1 Lint passes: `npm run lint`
+- [x] 2.2 Production build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 2.3 Authenticated user navigating to `/` is redirected to `/dashboard`
-- [ ] 2.4 Unauthenticated user stays on `/`
-- [ ] 2.5 Authenticated user with no workspace: `/` → `/dashboard` → `/workspace/setup`
+- [x] 2.3 Authenticated user navigating to `/` is redirected to `/dashboard`
+- [x] 2.4 Unauthenticated user stays on `/`
+- [x] 2.5 Authenticated user with no workspace: `/` → `/dashboard` → `/workspace/setup`

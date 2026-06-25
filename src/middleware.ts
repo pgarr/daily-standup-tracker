@@ -39,6 +39,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
     }
   }
 
+  if (context.locals.user && pathname === "/") {
+    return context.redirect("/dashboard");
+  }
+
   if (WORKSPACE_REQUIRED_ROUTES.some((r) => pathname.startsWith(r))) {
     if (!context.locals.user) return context.redirect("/auth/signin");
     if (!context.locals.workspace) return context.redirect(WORKSPACE_SETUP_REDIRECT);
