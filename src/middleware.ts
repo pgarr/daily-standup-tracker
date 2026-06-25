@@ -20,6 +20,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   const { pathname } = context.url;
 
+  if (context.locals.user && pathname === "/") {
+    return context.redirect("/dashboard");
+  }
+
   if (supabase && context.locals.user && !pathname.startsWith("/api")) {
     type MemberRow = WorkspaceMember & { workspace: Workspace | null };
     const memberResult = await supabase
@@ -37,10 +41,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
       context.locals.workspace = workspace ?? null;
       context.locals.workspaceMember = memberData;
     }
-  }
-
-  if (context.locals.user && pathname === "/") {
-    return context.redirect("/dashboard");
   }
 
   if (WORKSPACE_REQUIRED_ROUTES.some((r) => pathname.startsWith(r))) {
