@@ -27,7 +27,10 @@ export async function haikuSimilarity(a: string, b: string): Promise<boolean> {
     const text = response.content[0]?.type === "text" ? response.content[0].text : "";
     return text.trim().toUpperCase().startsWith("YES");
   } catch (err) {
-    console.error("[haikuSimilarity] Anthropic call failed, falling back to Jaccard:", err);
+    console.error(
+      "[haikuSimilarity] LLM detection degraded — falling back to Jaccard (model=claude-haiku-4-5-20251001):",
+      err,
+    );
     return jaccardSimilarity(a, b);
   }
 }

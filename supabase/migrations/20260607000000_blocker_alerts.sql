@@ -18,6 +18,7 @@ CREATE POLICY "team lead can view all blocker alerts in workspace"
   ON blocker_alerts FOR SELECT TO authenticated
   USING (auth_user_is_team_lead() AND workspace_id = auth_user_workspace_id());
 
+-- No UPDATE policy: alerts are immutable (first action wins, ignoreDuplicates=true)
 CREATE POLICY "members can insert own blocker alerts"
   ON blocker_alerts FOR INSERT TO authenticated
   WITH CHECK (auth.uid() = user_id AND workspace_id = auth_user_workspace_id());

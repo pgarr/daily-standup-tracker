@@ -20,23 +20,25 @@ let showBlockerBanner = false;
 if (!user) return Astro.redirect("/auth/signin");
 
 const today = new Date().toISOString().slice(0, 10);
+const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 const isFreshSubmit = Astro.url.searchParams.get("blocker_match") === "1";
 
 if (supabase) {
-  const { data, error: queryError } = await supabase
-    .from("standup_entries")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("submitted_date", { ascending: false })
-    .limit(60);
+  const [{ data, error: queryError }, { data: alertData }] = await Promise.all([
+    supabase
+      .from("standup_entries")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("submitted_date", { ascending: false })
+      .limit(60),
+    supabase.from("blocker_alerts").select("*").eq("user_id", user.id).gte("trigger_date", sixtyDaysAgo).limit(90),
+  ]);
   if (queryError) {
     loadError = "Failed to load standup entries. Please try refreshing.";
   } else {
     recentEntries = data as StandupEntry[];
     todayEntry = recentEntries.find((e) => e.submitted_date === today) ?? null;
   }
-
-  const { data: alertData } = await supabase.from("blocker_alerts").select("*").eq("user_id", user.id);
   if (alertData) blockerAlerts = alertData as BlockerAlert[];
 
   if (isFreshSubmit && todayEntry?.blockers) {

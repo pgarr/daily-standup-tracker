@@ -43,3 +43,10 @@
 - **Problem**: Without an explicit Origin/Referer check, CSRF safety relies on Supabase cookie `SameSite=Lax` defaults. If cookie configuration ever changes to `SameSite=None` (e.g. for an embedded context), cross-site POSTs become exploitable. Hit during navigation impl-review (F4).
 - **Rule**: Every POST endpoint that accepts form submissions must check the `Origin` or `Referer` header against the app's own origin (`context.url.origin`) at the top of the handler. Return 403 on mismatch. Pattern: parse the header with `new URL(...)` and compare `.origin` fields. Absence of the header is permissive (may be a direct API call).
 - **Applies to**: plan, plan-review, implement, impl-review
+
+## Silent LLM fallback can mask model deprecation or API failures
+
+- **Context**: src/lib/similarity.ts — haikuSimilarity catches all Anthropic API errors and falls back to Jaccard similarity without surfacing the failure to callers or operators.
+- **Problem**: If the model snapshot ID is deprecated (or billing lapses, or the API rate-limits), every call silently downgrades to the keyword-match fallback. LLM-based detection stops working with no visible signal — accuracy degrades invisibly.
+- **Rule**: [Fill in: e.g. "When an LLM call falls back to a deterministic alternative, log a warning at WARN level (not just console.error) and expose a health metric or flag so operators can detect silent degradation."]
+- **Applies to**: [Fill in: e.g. "Any module that silently falls back from an LLM API call to a non-LLM alternative."]
