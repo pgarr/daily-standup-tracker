@@ -431,26 +431,26 @@ implementation gate.
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly: `npx supabase db reset`
-- [x] 1.2 Build succeeds: `npm run build`
-- [x] 1.3 Linting passes: `npm run lint`
+- [x] 1.1 Migration applies cleanly: `npx supabase db reset` — cacf14d
+- [x] 1.2 Build succeeds: `npm run build` — cacf14d
+- [x] 1.3 Linting passes: `npm run lint` — cacf14d
 
 #### Manual
 
-- [x] 1.4 `blocker_alerts` table visible in Supabase Studio after reset
-- [x] 1.5 `ANTHROPIC_API_KEY` present in `astro.config.mjs` env schema
+- [x] 1.4 `blocker_alerts` table visible in Supabase Studio after reset — cacf14d
+- [x] 1.5 `ANTHROPIC_API_KEY` present in `astro.config.mjs` env schema — cacf14d
 
 ### Phase 2: Detection Logic
 
 #### Automated
 
-- [ ] 2.1 All 11 blocker-detection tests pass (skip guard lifts): `npm test`
-- [ ] 2.2 Build succeeds: `npm run build`
-- [ ] 2.3 Linting passes: `npm run lint`
+- [x] 2.1 All 11 blocker-detection tests pass (skip guard lifts): `npm test`
+- [x] 2.2 Build succeeds: `npm run build`
+- [x] 2.3 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 2.4 `blocker detection` describe block runs (not skipped) with all 11 tests green
+- [x] 2.4 `blocker detection` describe block runs (not skipped) with all 11 tests green
 
 ### Phase 3: Submit Trigger + Action Routes
 
