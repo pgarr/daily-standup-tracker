@@ -456,16 +456,16 @@ implementation gate.
 
 #### Automated
 
-- [ ] 3.1 Build succeeds: `npm run build`
-- [ ] 3.2 Linting passes: `npm run lint`
+- [x] 3.1 Build succeeds: `npm run build`
+- [x] 3.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 3.3 Submit with non-empty blocker → URL becomes `/dashboard?blocker_match=1`
-- [ ] 3.4 Submit with empty blocker → URL is `/dashboard` (no param)
-- [ ] 3.5 POST to `/api/blocker/confirm` → row in `blocker_alerts` with `status: confirmed`
-- [ ] 3.6 POST to `/api/blocker/dismiss` → row in `blocker_alerts` with `status: dismissed`
-- [ ] 3.7 Duplicate confirm POST → no 409 (upsert handles conflict)
+- [x] 3.3 Submit with non-empty blocker → URL becomes `/dashboard?blocker_match=1`
+- [x] 3.4 Submit with empty blocker → URL is `/dashboard` (no param)
+- [x] 3.5 POST to `/api/blocker/confirm` → row in `blocker_alerts` with `status: confirmed`
+- [x] 3.6 POST to `/api/blocker/dismiss` → row in `blocker_alerts` with `status: dismissed`
+- [x] 3.7 Duplicate confirm POST → no 409 (upsert handles conflict)
 
 ### Phase 4: Dashboard Integration
 

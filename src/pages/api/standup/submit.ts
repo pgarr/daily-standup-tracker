@@ -69,5 +69,5 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/dashboard?error=${encodeURIComponent(error.message)}`);
   }
 
-  return context.redirect("/dashboard");
+  return context.redirect(rawBlockers !== "" ? "/dashboard?blocker_match=1" : "/dashboard");
 };
