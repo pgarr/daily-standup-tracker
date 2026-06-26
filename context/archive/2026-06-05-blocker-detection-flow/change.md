@@ -1,10 +1,10 @@
 ---
 change_id: blocker-detection-flow
 title: Blocker detection flow
-status: impl_reviewed
+status: archived
 created: 2026-06-05
 updated: 2026-06-26
-archived_at: null
+archived_at: 2026-06-26T20:13:51Z
 ---
 
 ## Notes

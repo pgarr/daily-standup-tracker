@@ -3,7 +3,7 @@ project: "Daily Standup Tracker"
 version: 2
 status: draft
 created: 2026-06-04
-updated: 2026-06-06
+updated: 2026-06-26
 prd_version: 3
 main_goal: market-feedback
 top_blocker: time
@@ -31,7 +31,7 @@ Developers and knowledge workers have no dedicated home for their daily standup 
 | S-01 | auth-and-workspace             | register, log in/out, and create a workspace (becoming Team Lead)                               | F-01                   | FR-001, FR-002, FR-003               | done     |
 | S-02 | member-invite-and-join         | Team Lead invites a member by email; invited user joins the workspace as a Member               | S-01                   | FR-004, FR-005                       | done     |
 | S-03 | standup-submission-and-history | submit a standup, view their history list, and see their streak                                  | S-01                   | FR-006, FR-009, FR-011, US-01        | done     |
-| S-04 | blocker-detection-flow         | submit two similar consecutive blockers, see a match suggestion, confirm it, and see an alert    | S-03                   | FR-012, US-02                        | proposed |
+| S-04 | blocker-detection-flow         | submit two similar consecutive blockers, see a match suggestion, confirm it, and see an alert    | S-03                   | FR-012, US-02                        | done     |
 | S-05 | team-feed-and-alerts           | view the team feed with today's entries, confirmed alerts, and configure the alert threshold     | S-01, S-02, S-03, S-04 | FR-013, FR-014, FR-015, US-03        | proposed |
 | S-06 | standup-entry-edit-delete      | edit or delete their own previously submitted standup entry                                      | S-03                   | FR-007, FR-008                       | proposed |
 
@@ -123,7 +123,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - How will blocker similarity be evaluated — keyword overlap, Levenshtein distance, or an external AI inference call? — Owner: user. Block: no. PRD Business Logic explicitly defers this to a downstream implementation decision; any mechanism satisfying US-02 acceptance criteria is valid.
 - **Risk:** similarity evaluation is the product's core differentiating mechanic; if it fires too eagerly (false positives) or too rarely, user trust breaks before the north star is demonstrated — getting the similarity heuristic right in this slice matters even if the exact mechanism is an implementation call
-- **Status:** proposed
+- **Status:** done
 
 ### S-05: team-feed-and-alerts
 
@@ -189,3 +189,4 @@ Non-blocking implementation questions (do not block planning; surface at `/10x-p
 - **S-01: user can register with email + password, log in, log out, and a newly registered user can create a workspace and become its Team Lead.** — Archived 2026-06-05 → `context/archive/2026-06-04-auth-and-workspace/`. Lesson: —.
 - **S-02: Team Lead can send an email invite to a new member; the invited user registers via the invite link and appears in the workspace as a Member.** — Archived 2026-06-06 → `context/archive/2026-06-05-member-invite-and-join/`. Lesson: —.
 - **S-03: member can submit a standup (did and plan required; blockers optional), immediately see their history list, and see their streak counter showing consecutive business days logged (Mon–Fri; weekend gaps do not reset the streak).** — Archived 2026-06-06 → `context/archive/2026-06-05-standup-submission-and-history/`. Lesson: —.
+- **S-04: when a member submits two or more consecutive business-day standups with similar blocker content, a match suggestion is surfaced; the member confirms or dismisses the suggestion; a confirmed match fires a blocker alert visible in the member's history.** — Archived 2026-06-26 → `context/archive/2026-06-05-blocker-detection-flow/`. Lesson: —.
