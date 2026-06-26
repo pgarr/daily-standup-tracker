@@ -2,7 +2,9 @@
 import AppLayout from "@/layouts/AppLayout.astro";
 import { createClient } from "@/lib/supabase";
 import { calculateStreak } from "@/lib/streak";
-import type { StandupEntry } from "@/types";
+import { shouldSuggestBlockerMatch } from "@/lib/blocker";
+import { haikuSimilarity } from "@/lib/similarity";
+import type { BlockerAlert, StandupEntry } from "@/types";
 import StandupForm from "@/components/standup/StandupForm";
 
 const { user, workspace, workspaceMember } = Astro.locals;
@@ -12,11 +14,15 @@ const supabase = createClient(Astro.request.headers, Astro.cookies);
 let recentEntries: StandupEntry[] = [];
 let todayEntry: StandupEntry | null = null;
 let loadError: string | null = null;
+let blockerAlerts: BlockerAlert[] = [];
+let showBlockerBanner = false;
 
 if (!user) return Astro.redirect("/auth/signin");
 
+const today = new Date().toISOString().slice(0, 10);
+const isFreshSubmit = Astro.url.searchParams.get("blocker_match") === "1";
+
 if (supabase) {
-  const today = new Date().toISOString().slice(0, 10);
   const { data, error: queryError } = await supabase
     .from("standup_entries")
     .select("*")
@@ -28,6 +34,24 @@ if (supabase) {
   } else {
     recentEntries = data as StandupEntry[];
     todayEntry = recentEntries.find((e) => e.submitted_date === today) ?? null;
+  }
+
+  const { data: alertData } = await supabase.from("blocker_alerts").select("*").eq("user_id", user.id);
+  if (alertData) blockerAlerts = alertData as BlockerAlert[];
+
+  if (isFreshSubmit && todayEntry?.blockers) {
+    try {
+      const existingAlert = blockerAlerts.find((a) => a.trigger_date === today);
+      if (!existingAlert) {
+        showBlockerBanner = await shouldSuggestBlockerMatch(
+          recentEntries,
+          workspace?.alert_threshold ?? 2,
+          haikuSimilarity,
+        );
+      }
+    } catch (err) {
+      console.error("[dashboard] blocker detection failed:", err);
+    }
   }
 }
 
@@ -76,6 +100,50 @@ const submitError = Astro.url.searchParams.get("error");
         )
       }
 
+      <!-- Blocker match banner -->
+      {
+        showBlockerBanner && todayEntry && (
+          <section class="rounded-2xl border border-amber-400/30 bg-amber-500/10 p-6 text-white backdrop-blur-xl">
+            <h2 class="mb-2 text-base font-semibold text-amber-200">Recurring blocker detected</h2>
+            <p class="mb-4 text-sm text-amber-100/70">
+              It looks like you've been blocked by the same issue on consecutive days. Is this the same blocker?
+            </p>
+            <div class="mb-4 space-y-2">
+              <div class="rounded-lg border border-amber-400/20 bg-amber-500/10 p-3">
+                <p class="mb-0.5 text-xs font-medium tracking-wide text-amber-300/60 uppercase">Today</p>
+                <p class="text-sm text-amber-100/90">{todayEntry.blockers}</p>
+              </div>
+              {recentEntries[1]?.blockers && (
+                <div class="rounded-lg border border-amber-400/20 bg-amber-500/10 p-3">
+                  <p class="mb-0.5 text-xs font-medium tracking-wide text-amber-300/60 uppercase">Previous day</p>
+                  <p class="text-sm text-amber-100/90">{recentEntries[1].blockers}</p>
+                </div>
+              )}
+            </div>
+            <div class="flex gap-3">
+              <form method="POST" action="/api/blocker/confirm">
+                <input type="hidden" name="trigger_date" value={todayEntry.submitted_date} />
+                <button
+                  type="submit"
+                  class="rounded-lg border border-amber-400/40 bg-amber-500/20 px-4 py-2 text-sm font-medium text-amber-200 transition hover:bg-amber-500/30"
+                >
+                  Yes, same blocker
+                </button>
+              </form>
+              <form method="POST" action="/api/blocker/dismiss">
+                <input type="hidden" name="trigger_date" value={todayEntry.submitted_date} />
+                <button
+                  type="submit"
+                  class="rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-blue-100/70 transition hover:bg-white/10"
+                >
+                  No, different issue
+                </button>
+              </form>
+            </div>
+          </section>
+        )
+      }
+
       <!-- Standup: form or today's read-only entry -->
       <section class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl">
         {
@@ -119,27 +187,39 @@ const submitError = Astro.url.searchParams.get("error");
           <section>
             <h2 class="mb-3 text-sm font-medium tracking-wide text-blue-100/60 uppercase">History</h2>
             <div class="space-y-3">
-              {displayEntries.map((entry) => (
-                <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-white backdrop-blur-xl">
-                  <p class="mb-3 text-xs font-medium text-purple-300">{entry.submitted_date}</p>
-                  <div class="space-y-3">
-                    <div>
-                      <p class="mb-1 text-xs font-medium tracking-wide text-blue-100/50 uppercase">What you did</p>
-                      <p class="text-sm whitespace-pre-wrap text-blue-100/80">{entry.did}</p>
+              {displayEntries.map((entry) => {
+                const entryAlert = blockerAlerts.find(
+                  (a) => a.trigger_date === entry.submitted_date && a.status === "confirmed",
+                );
+                return (
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-white backdrop-blur-xl">
+                    <div class="mb-3 flex items-center justify-between">
+                      <p class="text-xs font-medium text-purple-300">{entry.submitted_date}</p>
+                      {entryAlert && (
+                        <span class="rounded-full border border-red-400/40 bg-red-500/20 px-2 py-0.5 text-xs font-medium text-red-300">
+                          ⚠ Recurring Blocker
+                        </span>
+                      )}
                     </div>
-                    <div>
-                      <p class="mb-1 text-xs font-medium tracking-wide text-blue-100/50 uppercase">Plan</p>
-                      <p class="text-sm whitespace-pre-wrap text-blue-100/80">{entry.plan}</p>
-                    </div>
-                    {entry.blockers && (
+                    <div class="space-y-3">
                       <div>
-                        <p class="mb-1 text-xs font-medium tracking-wide text-blue-100/50 uppercase">Blockers</p>
-                        <p class="text-sm whitespace-pre-wrap text-blue-100/80">{entry.blockers}</p>
+                        <p class="mb-1 text-xs font-medium tracking-wide text-blue-100/50 uppercase">What you did</p>
+                        <p class="text-sm whitespace-pre-wrap text-blue-100/80">{entry.did}</p>
                       </div>
-                    )}
+                      <div>
+                        <p class="mb-1 text-xs font-medium tracking-wide text-blue-100/50 uppercase">Plan</p>
+                        <p class="text-sm whitespace-pre-wrap text-blue-100/80">{entry.plan}</p>
+                      </div>
+                      {entry.blockers && (
+                        <div>
+                          <p class="mb-1 text-xs font-medium tracking-wide text-blue-100/50 uppercase">Blockers</p>
+                          <p class="text-sm whitespace-pre-wrap text-blue-100/80">{entry.blockers}</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         )

@@ -456,30 +456,30 @@ implementation gate.
 
 #### Automated
 
-- [x] 3.1 Build succeeds: `npm run build`
-- [x] 3.2 Linting passes: `npm run lint`
+- [x] 3.1 Build succeeds: `npm run build` — 8a6b3cc
+- [x] 3.2 Linting passes: `npm run lint` — 8a6b3cc
 
 #### Manual
 
-- [x] 3.3 Submit with non-empty blocker → URL becomes `/dashboard?blocker_match=1`
-- [x] 3.4 Submit with empty blocker → URL is `/dashboard` (no param)
-- [x] 3.5 POST to `/api/blocker/confirm` → row in `blocker_alerts` with `status: confirmed`
-- [x] 3.6 POST to `/api/blocker/dismiss` → row in `blocker_alerts` with `status: dismissed`
-- [x] 3.7 Duplicate confirm POST → no 409 (upsert handles conflict)
+- [x] 3.3 Submit with non-empty blocker → URL becomes `/dashboard?blocker_match=1` — 8a6b3cc
+- [x] 3.4 Submit with empty blocker → URL is `/dashboard` (no param) — 8a6b3cc
+- [x] 3.5 POST to `/api/blocker/confirm` → row in `blocker_alerts` with `status: confirmed` — 8a6b3cc
+- [x] 3.6 POST to `/api/blocker/dismiss` → row in `blocker_alerts` with `status: dismissed` — 8a6b3cc
+- [x] 3.7 Duplicate confirm POST → no 409 (upsert handles conflict) — 8a6b3cc
 
 ### Phase 4: Dashboard Integration
 
 #### Automated
 
-- [ ] 4.1 Build succeeds: `npm run build`
-- [ ] 4.2 Linting passes: `npm run lint`
-- [ ] 4.3 Full test suite green: `npm test`
+- [x] 4.1 Build succeeds: `npm run build`
+- [x] 4.2 Linting passes: `npm run lint`
+- [x] 4.3 Full test suite green: `npm test`
 
 #### Manual
 
-- [ ] 4.4 Similar consecutive blockers → confirmation banner appears on second submit
-- [ ] 4.5 Confirm flow → banner gone, history badge appears on today's entry
-- [ ] 4.6 Dismiss flow → banner gone, no history badge
-- [ ] 4.7 Re-load after confirm/dismiss → banner does not re-appear
-- [ ] 4.8 Invalid `ANTHROPIC_API_KEY` → banner still appears (Jaccard fallback)
-- [ ] 4.9 Empty blocker submit → no `?blocker_match=1`, no banner
+- [x] 4.4 Similar consecutive blockers → confirmation banner appears on second submit
+- [x] 4.5 Confirm flow → banner gone, history badge appears on today's entry
+- [x] 4.6 Dismiss flow → banner gone, no history badge
+- [x] 4.7 Re-load after confirm/dismiss → banner does not re-appear
+- [x] 4.8 Invalid `ANTHROPIC_API_KEY` → banner still appears (Jaccard fallback)
+- [x] 4.9 Empty blocker submit → no `?blocker_match=1`, no banner
