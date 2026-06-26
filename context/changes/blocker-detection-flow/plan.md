@@ -471,15 +471,15 @@ implementation gate.
 
 #### Automated
 
-- [x] 4.1 Build succeeds: `npm run build`
-- [x] 4.2 Linting passes: `npm run lint`
-- [x] 4.3 Full test suite green: `npm test`
+- [x] 4.1 Build succeeds: `npm run build` — 3e3b48d
+- [x] 4.2 Linting passes: `npm run lint` — 3e3b48d
+- [x] 4.3 Full test suite green: `npm test` — 3e3b48d
 
 #### Manual
 
-- [x] 4.4 Similar consecutive blockers → confirmation banner appears on second submit
-- [x] 4.5 Confirm flow → banner gone, history badge appears on today's entry
-- [x] 4.6 Dismiss flow → banner gone, no history badge
-- [x] 4.7 Re-load after confirm/dismiss → banner does not re-appear
-- [x] 4.8 Invalid `ANTHROPIC_API_KEY` → banner still appears (Jaccard fallback)
-- [x] 4.9 Empty blocker submit → no `?blocker_match=1`, no banner
+- [x] 4.4 Similar consecutive blockers → confirmation banner appears on second submit — 3e3b48d
+- [x] 4.5 Confirm flow → banner gone, history badge appears on today's entry — 3e3b48d
+- [x] 4.6 Dismiss flow → banner gone, no history badge — 3e3b48d
+- [x] 4.7 Re-load after confirm/dismiss → banner does not re-appear — 3e3b48d
+- [x] 4.8 Invalid `ANTHROPIC_API_KEY` → banner still appears (Jaccard fallback) — 3e3b48d
+- [x] 4.9 Empty blocker submit → no `?blocker_match=1`, no banner — 3e3b48d
