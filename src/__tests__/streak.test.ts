@@ -2,6 +2,11 @@ import { describe, it, expect } from "vitest";
 import { calculateStreak } from "@/lib/streak";
 
 describe("calculateStreak", () => {
+  it("returns 0 for an empty array", () => {
+    // PRD v3 FR-011: streak of zero when no entries exist
+    expect(calculateStreak([])).toBe(0);
+  });
+
   it("returns 3 for three consecutive business days (Mon/Tue/Wed)", () => {
     // PRD v3 FR-011: standard consecutive Mon–Fri run
     const entries = [

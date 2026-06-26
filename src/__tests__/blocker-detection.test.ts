@@ -1,17 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { isNextBusinessDay, shouldSuggestBlockerMatch } from "@/lib/blocker";
 
-// TODO(s-04-blocker-detection): remove this skip guard when S-04 ships the real implementation
-const implemented = (() => {
-  try {
-    isNextBusinessDay(new Date("2026-06-01"), new Date("2026-06-02"));
-    return true;
-  } catch {
-    return false;
-  }
-})();
-
-describe.skipIf(!implemented)("blocker detection", () => {
+describe("blocker detection", () => {
   describe("isNextBusinessDay", () => {
     it("returns true for Mon→Tue — standard consecutive business days", () => {
       // PRD v3 FR-012: adjacent Mon–Fri days are consecutive business days
@@ -40,8 +30,8 @@ describe.skipIf(!implemented)("blocker detection", () => {
   });
 
   describe("shouldSuggestBlockerMatch", () => {
-    const alwaysMatch = () => Promise.resolve(true);
-    const neverMatch = () => Promise.resolve(false);
+    const alwaysMatch: (a: string, b: string) => Promise<boolean> = async () => true;
+    const neverMatch: (a: string, b: string) => Promise<boolean> = async () => false;
     const e = (submitted_date: string, blockers: string | null) => ({ submitted_date, blockers });
 
     it("returns true when threshold met, days consecutive, and blockers similar", async () => {
@@ -77,6 +67,12 @@ describe.skipIf(!implemented)("blocker detection", () => {
     it("returns false when most recent entry has null blocker", async () => {
       // PRD v3 FR-012 / US-02 AC: alert requires non-null, non-empty blockers on all entries
       const entries = [e("2026-06-01", null), e("2026-05-29", "X")];
+      expect(await shouldSuggestBlockerMatch(entries, 2, alwaysMatch)).toBe(false);
+    });
+
+    it("returns false when most recent entry has empty-string blocker", async () => {
+      // PRD v3 FR-012 / US-02 AC: empty string is treated the same as null — no match suggestion
+      const entries = [e("2026-06-01", ""), e("2026-05-29", "X")];
       expect(await shouldSuggestBlockerMatch(entries, 2, alwaysMatch)).toBe(false);
     });
   });
