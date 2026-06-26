@@ -20,6 +20,17 @@ export const POST: APIRoute = async (context) => {
     return context.redirect("/auth/signin");
   }
 
+  const requestOrigin = context.request.headers.get("Origin") ?? context.request.headers.get("Referer");
+  if (requestOrigin) {
+    try {
+      if (new URL(requestOrigin).origin !== context.url.origin) {
+        return new Response("Forbidden", { status: 403 });
+      }
+    } catch {
+      return new Response("Forbidden", { status: 403 });
+    }
+  }
+
   const supabase = createClient(context.request.headers, context.cookies);
   if (!supabase) {
     return context.redirect(`/dashboard?error=${encodeURIComponent("Supabase is not configured")}`);

@@ -36,25 +36,33 @@ export const POST: APIRoute = async (context) => {
     return context.redirect("/dashboard");
   }
 
-  const { data: member } = await supabase
+  const { data: member, error: memberError } = await supabase
     .from("workspace_member")
     .select("workspace_id")
     .eq("user_id", user.id)
     .maybeSingle();
 
+  if (memberError) {
+    return context.redirect(`/dashboard?error=${encodeURIComponent("Failed to load workspace")}`);
+  }
   if (!member) {
-    return context.redirect("/dashboard");
+    return context.redirect("/workspace/setup");
   }
 
-  await supabase.from("blocker_alerts").upsert(
+  const { error } = await supabase.from("blocker_alerts").upsert(
     {
       workspace_id: member.workspace_id,
       user_id: user.id,
       trigger_date: result.data.trigger_date,
       status: "dismissed",
     },
+    // ignoreDuplicates: first action (confirm or dismiss) wins for a given trigger_date; alerts are immutable by design
     { onConflict: "user_id,trigger_date", ignoreDuplicates: true },
   );
+
+  if (error) {
+    return context.redirect(`/dashboard?error=${encodeURIComponent("Failed to record blocker alert")}`);
+  }
 
   return context.redirect("/dashboard");
 };
