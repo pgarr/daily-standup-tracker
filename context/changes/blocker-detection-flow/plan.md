@@ -444,13 +444,13 @@ implementation gate.
 
 #### Automated
 
-- [x] 2.1 All 11 blocker-detection tests pass (skip guard lifts): `npm test`
-- [x] 2.2 Build succeeds: `npm run build`
-- [x] 2.3 Linting passes: `npm run lint`
+- [x] 2.1 All 11 blocker-detection tests pass (skip guard lifts): `npm test` — 25ab65c
+- [x] 2.2 Build succeeds: `npm run build` — 25ab65c
+- [x] 2.3 Linting passes: `npm run lint` — 25ab65c
 
 #### Manual
 
-- [x] 2.4 `blocker detection` describe block runs (not skipped) with all 11 tests green
+- [x] 2.4 `blocker detection` describe block runs (not skipped) with all 11 tests green — 25ab65c
 
 ### Phase 3: Submit Trigger + Action Routes
 

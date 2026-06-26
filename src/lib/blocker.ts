@@ -1,6 +1,7 @@
 // Contract: context/changes/test-phase-3/plan.md § Binding Function Contracts
 
 export function isNextBusinessDay(prev: Date, next: Date): boolean {
+  // prev is guaranteed to be a weekday (Mon–Fri) since entries are only submitted on business days
   const prevDay = prev.getUTCDay(); // 0=Sun, 1=Mon, ..., 5=Fri, 6=Sat
   const daysUntilNextBusiness = prevDay === 5 ? 3 : 1; // Fri→Mon skips weekend
 
