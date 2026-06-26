@@ -1,9 +1,9 @@
 ---
 change_id: blocker-detection-flow
 title: Blocker detection flow
-status: plan_reviewed
+status: implementing
 created: 2026-06-05
-updated: 2026-06-07
+updated: 2026-06-26
 archived_at: null
 ---
 

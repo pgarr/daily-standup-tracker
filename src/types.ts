@@ -26,6 +26,15 @@ export interface StandupEntry {
   created_at: string;
 }
 
+export interface BlockerAlert {
+  id: string;
+  workspace_id: string;
+  user_id: string;
+  trigger_date: string; // 'YYYY-MM-DD'
+  status: "confirmed" | "dismissed";
+  created_at: string;
+}
+
 export interface WorkspaceInvitation {
   id: string;
   workspace_id: string;

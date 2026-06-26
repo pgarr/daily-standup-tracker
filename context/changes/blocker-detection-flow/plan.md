@@ -431,14 +431,14 @@ implementation gate.
 
 #### Automated
 
-- [ ] 1.1 Migration applies cleanly: `npx supabase db reset`
-- [ ] 1.2 Build succeeds: `npm run build`
-- [ ] 1.3 Linting passes: `npm run lint`
+- [x] 1.1 Migration applies cleanly: `npx supabase db reset`
+- [x] 1.2 Build succeeds: `npm run build`
+- [x] 1.3 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 1.4 `blocker_alerts` table visible in Supabase Studio after reset
-- [ ] 1.5 `ANTHROPIC_API_KEY` present in `astro.config.mjs` env schema
+- [x] 1.4 `blocker_alerts` table visible in Supabase Studio after reset
+- [x] 1.5 `ANTHROPIC_API_KEY` present in `astro.config.mjs` env schema
 
 ### Phase 2: Detection Logic
 
