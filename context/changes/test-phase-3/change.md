@@ -1,9 +1,9 @@
 ---
 change_id: test-phase-3
 title: Test phase 3
-status: implementing
+status: implemented
 created: 2026-06-05
-updated: 2026-06-05
+updated: 2026-06-26
 archived_at: null
 ---
 

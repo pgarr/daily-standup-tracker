@@ -352,7 +352,7 @@ This plan IS the testing strategy. All deliverables are test files. The risk-res
 #### Automated
 
 - [x] 1.0 `src/lib/streak.ts` stub created with `calculateStreak` contract — 6c2b244
-- [ ] 1.1 `npm test` exits 0 with 7 streak tests passing — gated: verify after S-03 ships
+- [x] 1.1 `npm test` exits 0 with 7 streak tests passing — gated: verify after S-03 ships
 - [x] 1.2 `npm run lint` passes with both new files — 6c2b244
 - [x] 1.3 TypeScript compilation succeeds — 6c2b244
 
@@ -366,7 +366,7 @@ This plan IS the testing strategy. All deliverables are test files. The risk-res
 #### Automated
 
 - [x] 2.0 `src/lib/blocker.ts` stub created with `isNextBusinessDay` + `shouldSuggestBlockerMatch` contracts — b26a215
-- [ ] 2.1 `npm test` exits 0 with all 11 blocker-detection tests passing (plus all prior tests) — gated: verify after S-04 ships
+- [x] 2.1 `npm test` exits 0 with all 11 blocker-detection tests passing (plus all prior tests) — gated: verify after S-04 ships
 - [x] 2.2 `npm run lint` passes with both new files — b26a215
 - [x] 2.3 TypeScript compilation succeeds — b26a215
 
