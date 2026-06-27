@@ -264,29 +264,29 @@ For MVP team sizes (small per PRD), the workspace-scoped `standup_entries` query
 
 #### Automated
 
-- [x] 1.1 Migration applies without error
-- [x] 1.2 Build passes
-- [x] 1.3 Lint passes
+- [x] 1.1 Migration applies without error — 919fdd9
+- [x] 1.2 Build passes — 919fdd9
+- [x] 1.3 Lint passes — 919fdd9
 
 #### Manual
 
-- [x] 1.4 Supabase Studio: Team Lead SELECT policy exists on standup_entries
-- [x] 1.5 Supabase Studio: get_workspace_member_emails function exists
-- [x] 1.6 SQL editor (Team Lead session): get_workspace_member_emails() returns member rows with emails
-- [x] 1.7 SQL editor (Member session): get_workspace_member_emails() returns empty
+- [x] 1.4 Supabase Studio: Team Lead SELECT policy exists on standup_entries — 919fdd9
+- [x] 1.5 Supabase Studio: get_workspace_member_emails function exists — 919fdd9
+- [x] 1.6 SQL editor (Team Lead session): get_workspace_member_emails() returns member rows with emails — 919fdd9
+- [x] 1.7 SQL editor (Member session): get_workspace_member_emails() returns empty — 919fdd9
 
 ### Phase 2: Threshold Update API Endpoint + Route Registration
 
 #### Automated
 
-- [ ] 2.1 Build passes
-- [ ] 2.2 Lint passes
+- [x] 2.1 Build passes
+- [x] 2.2 Lint passes
 
 #### Manual
 
-- [ ] 2.3 Team Lead POST updates alert_threshold and redirects to /team-feed?success=threshold_updated
-- [ ] 2.4 Member POST redirects with error (role check fires)
-- [ ] 2.5 Unauthenticated GET /team-feed redirects to /auth/signin
+- [x] 2.3 Team Lead POST updates alert_threshold and redirects to /team-feed?success=threshold_updated
+- [x] 2.4 Member POST redirects with error (role check fires)
+- [x] 2.5 Unauthenticated GET /team-feed redirects to /auth/signin
 
 ### Phase 3: Team Feed Page + Topbar Update
 
