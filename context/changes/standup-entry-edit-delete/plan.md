@@ -348,13 +348,13 @@ Add a unit test documenting the delete-in-streak-middle behavior, and a Playwrig
 
 #### Automated
 
-- [x] 4.1 Vitest streak tests pass (new test + existing)
-- [x] 4.2 Playwright edit/delete spec passes with local Supabase
-- [x] 4.3 Playwright spec gracefully skips without Supabase
-- [x] 4.4 Build passes
-- [x] 4.5 Full lint passes
+- [x] 4.1 Vitest streak tests pass (new test + existing) — b6744a7
+- [x] 4.2 Playwright edit/delete spec passes with local Supabase — b6744a7
+- [x] 4.3 Playwright spec gracefully skips without Supabase — b6744a7
+- [x] 4.4 Build passes — b6744a7
+- [x] 4.5 Full lint passes — b6744a7
 
 #### Manual
 
-- [x] 4.6 npx vitest run — no regressions in existing streak tests
-- [x] 4.7 npx playwright test — no regressions in middleware-gate or role-gating specs
+- [x] 4.6 npx vitest run — no regressions in existing streak tests — b6744a7
+- [x] 4.7 npx playwright test — no regressions in middleware-gate or role-gating specs — b6744a7
