@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-06-07 (§3 Phase 2 status + change folder; §4 Playwright CI/Supabase strategy; §5 E2E gate clarification; §8 freshness)
+> Last updated: 2026-06-27 (§3 all phases reconciled to complete; archive paths updated)
 
 ---
 
@@ -73,11 +73,11 @@ orchestrator updates Status and Change folder as artifacts appear on disk.
 
 | # | Phase name | Goal | Risks covered | Test types | Status | Change folder |
 |---|---|---|---|---|---|---|
-| 1 | Runner + auth/routing protection | Bootstrap Vitest; prove middleware correctly gates unauthenticated requests; protect against new-route-gap regression | #1 | integration (HTTP/middleware) | implementing | context/changes/testing-runner-auth-routing/ |
-| 2 | Standup data isolation | Prove standup_entries RLS enforces absolute horizontal isolation under a real Member JWT; document the service-role trap | #2 | integration (local Supabase, real JWT) | planned | context/changes/test-standup-data-isolation/ |
-| 3 | Domain logic — streak + blocker | Unit tests for business-day streak boundary and blocker alert firing logic (Phase 3.1: streak tests, gates on S-03; Phase 3.2: blocker tests, gates on S-04) | #4, #5 | unit | planned | context/changes/test-phase-3/ |
-| 4 | Security — role gating + invite | Prove team feed rejects Members; prove invite token replay is rejected and is email-bound | #3, #6 | integration | not started | — |
-| 5 | Entry mutation integrity | Prove edit/delete correctly recalculates streak; prove confirmed alert is not orphaned on entry deletion; prove write-path IDOR is rejected by RLS (extends Phase 2 scope) | #7 (write-path IDOR component of #2 also tested here) | integration | not started | — |
+| 1 | Runner + auth/routing protection | Bootstrap Vitest; prove middleware correctly gates unauthenticated requests; protect against new-route-gap regression | #1 | integration (HTTP/middleware) | complete | context/archive/2026-06-05-testing-runner-auth-routing/ |
+| 2 | Standup data isolation | Prove standup_entries RLS enforces absolute horizontal isolation under a real Member JWT; document the service-role trap | #2 | integration (local Supabase, real JWT) | complete | context/archive/2026-06-06-test-standup-data-isolation/ |
+| 3 | Domain logic — streak + blocker | Unit tests for business-day streak boundary and blocker alert firing logic (Phase 3.1: streak tests, gates on S-03; Phase 3.2: blocker tests, gates on S-04) | #4, #5 | unit | complete | context/archive/2026-06-05-test-phase-3/ |
+| 4 | Security — role gating + invite | Prove team feed rejects Members; prove invite token replay is rejected and is email-bound | #3, #6 | integration | complete | context/archive/2026-06-27-test-security-role-invite/ |
+| 5 | Entry mutation integrity | Prove edit/delete correctly recalculates streak; prove confirmed alert is not orphaned on entry deletion; prove write-path IDOR is rejected by RLS (extends Phase 2 scope) | #7 (write-path IDOR component of #2 also tested here) | integration | complete | context/archive/2026-06-27-test-entry-mutation-integrity/ |
 
 **Status vocabulary (fixed):**
 
