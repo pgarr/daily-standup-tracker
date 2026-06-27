@@ -134,7 +134,7 @@ test.describe.serial("entry mutation integrity (requires local Supabase + npm ru
     if (entryIdMon) await svc.from("standup_entries").delete().eq("id", entryIdMon);
     if (entryIdTue) await svc.from("standup_entries").delete().eq("id", entryIdTue);
     if (entryIdWed) await svc.from("standup_entries").delete().eq("id", entryIdWed);
-    if (workspaceId) await svc.from("workspace").delete().eq("id", workspaceId);
+    if (workspaceId) await svc.from("workspace").delete().eq("id", workspaceId); // cascades blocker_alerts (ON DELETE CASCADE)
     if (memberId) await svc.auth.admin.deleteUser(memberId);
     if (otherMemberId) await svc.auth.admin.deleteUser(otherMemberId);
     await memberCtx?.dispose();
@@ -201,10 +201,11 @@ test.describe.serial("entry mutation integrity (requires local Supabase + npm ru
     expect(updateErr).toBeNull();
     expect(updateCount).toBe(0);
 
-    const { count: deleteCount } = await otherClient
+    const { count: deleteCount, error: deleteErr } = await otherClient
       .from("standup_entries")
       .delete({ count: "exact" })
       .eq("id", entryIdMon);
+    expect(deleteErr).toBeNull();
     expect(deleteCount).toBe(0);
 
     const svc = createServiceClient();
