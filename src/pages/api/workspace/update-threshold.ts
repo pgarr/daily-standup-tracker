@@ -5,7 +5,11 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase";
 
 const schema = z.object({
-  threshold: z.coerce.number().int().min(1, "Threshold must be at least 1"),
+  threshold: z.coerce
+    .number()
+    .int()
+    .min(1, "Threshold must be at least 1")
+    .max(365, "Threshold cannot exceed 365 days"),
 });
 
 export const POST: APIRoute = async (context) => {
@@ -15,14 +19,15 @@ export const POST: APIRoute = async (context) => {
   }
 
   const requestOrigin = context.request.headers.get("Origin") ?? context.request.headers.get("Referer");
-  if (requestOrigin) {
-    try {
-      if (new URL(requestOrigin).origin !== context.url.origin) {
-        return new Response("Forbidden", { status: 403 });
-      }
-    } catch {
+  if (!requestOrigin) {
+    return new Response("Forbidden", { status: 403 });
+  }
+  try {
+    if (new URL(requestOrigin).origin !== context.url.origin) {
       return new Response("Forbidden", { status: 403 });
     }
+  } catch {
+    return new Response("Forbidden", { status: 403 });
   }
 
   const supabase = createClient(context.request.headers, context.cookies);

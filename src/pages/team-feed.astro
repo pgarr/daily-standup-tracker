@@ -51,19 +51,20 @@ const lowerClamp = addDays(today, -10);
 const rawDate = Astro.url.searchParams.get("date");
 let selectedDate = rawDate && /^\d{4}-\d{2}-\d{2}$/.test(rawDate) ? rawDate : today;
 
-// Clamp to [lowerClamp, today]
-if (selectedDate > today) selectedDate = today;
-if (selectedDate < lowerClamp) selectedDate = lowerClamp;
-
-// Snap weekend dates to the preceding Friday
+// Snap weekend dates to the preceding Friday before clamping so the clamp
+// boundary is always applied to the final business-day value
 const selectedDow = new Date(selectedDate + "T00:00:00Z").getUTCDay();
 if (selectedDow === 6) selectedDate = addDays(selectedDate, -1); // Sat → Fri
 if (selectedDow === 0) selectedDate = addDays(selectedDate, -2); // Sun → Fri
 
+// Clamp to [lowerClamp, today]
+if (selectedDate > today) selectedDate = today;
+if (selectedDate < lowerClamp) selectedDate = lowerClamp;
+
 const prevDate = prevBusinessDay(selectedDate);
 const nextDate = nextBusinessDay(selectedDate);
 const canGoPrev = prevDate >= lowerClamp;
-const canGoNext = selectedDate < today;
+const canGoNext = nextDate <= today;
 
 const [membersResult, entriesResult, alertsResult] = await Promise.all([
   supabase.rpc("get_workspace_member_emails"),
