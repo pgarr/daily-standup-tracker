@@ -375,18 +375,18 @@ globalTeardown: "./e2e/global-teardown.ts",
 ### Phase 2: Playwright globalSetup + role-gating spec
 
 #### Automated
-- [x] 2.1 Add `.auth/` to `.gitignore`
-- [x] 2.2 Write `e2e/global-setup.ts`
-- [x] 2.3 Write `e2e/global-teardown.ts`
-- [x] 2.4 Write `e2e/role-gating.spec.ts`
-- [x] 2.5 Update `playwright.config.ts` with `globalSetup`/`globalTeardown`
-- [x] 2.6 `npx playwright test` exits 0 (middleware-gate tests always pass; role-gating tests pass or skip)
-- [x] 2.7 `npm run lint` exits 0
-- [x] 2.8 `npm run build` exits 0
+- [x] 2.1 Add `.auth/` to `.gitignore` — d96e3d8
+- [x] 2.2 Write `e2e/global-setup.ts` — d96e3d8
+- [x] 2.3 Write `e2e/global-teardown.ts` — d96e3d8
+- [x] 2.4 Write `e2e/role-gating.spec.ts` — d96e3d8
+- [x] 2.5 Update `playwright.config.ts` with `globalSetup`/`globalTeardown` — d96e3d8
+- [x] 2.6 `npx playwright test` exits 0 (middleware-gate tests always pass; role-gating tests pass or skip) — d96e3d8
+- [x] 2.7 `npm run lint` exits 0 — d96e3d8
+- [x] 2.8 `npm run build` exits 0 — d96e3d8
 
 #### Manual
-- [x] 2.9 Confirm role-gating tests pass with local Supabase + dev server running
-- [x] 2.10 Confirm member session is rejected (302 /dashboard confirmed in output)
-- [x] 2.11 Confirm team_lead session is accepted (200 confirmed in output)
-- [x] 2.12 Confirm role-gating tests skip (not fail) when Supabase is stopped
-- [x] 2.13 Confirm workspace + users are gone from Supabase Studio after teardown
+- [x] 2.9 Confirm role-gating tests pass with local Supabase + dev server running — d96e3d8
+- [x] 2.10 Confirm member session is rejected (302 /dashboard confirmed in output) — d96e3d8
+- [x] 2.11 Confirm team_lead session is accepted (200 confirmed in output) — d96e3d8
+- [x] 2.12 Confirm role-gating tests skip (not fail) when Supabase is stopped — d96e3d8
+- [x] 2.13 Confirm workspace + users are gone from Supabase Studio after teardown — d96e3d8
