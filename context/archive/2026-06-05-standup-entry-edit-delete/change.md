@@ -1,10 +1,10 @@
 ---
 change_id: standup-entry-edit-delete
 title: Standup entry edit delete
-status: impl_reviewed
+status: archived
 created: 2026-06-05
 updated: 2026-06-27
-archived_at: null
+archived_at: 2026-06-27T16:31:44Z
 ---
 
 ## Notes

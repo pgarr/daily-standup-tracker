@@ -33,7 +33,7 @@ Developers and knowledge workers have no dedicated home for their daily standup 
 | S-03 | standup-submission-and-history | submit a standup, view their history list, and see their streak                                  | S-01                   | FR-006, FR-009, FR-011, US-01        | done     |
 | S-04 | blocker-detection-flow         | submit two similar consecutive blockers, see a match suggestion, confirm it, and see an alert    | S-03                   | FR-012, US-02                        | done     |
 | S-05 | team-feed-and-alerts           | view the team feed with today's entries, confirmed alerts, and configure the alert threshold     | S-01, S-02, S-03, S-04 | FR-013, FR-014, FR-015, US-03        | done     |
-| S-06 | standup-entry-edit-delete      | edit or delete their own previously submitted standup entry                                      | S-03                   | FR-007, FR-008                       | proposed |
+| S-06 | standup-entry-edit-delete      | edit or delete their own previously submitted standup entry                                      | S-03                   | FR-007, FR-008                       | done     |
 
 ## Streams
 
@@ -148,7 +148,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Does deleting a standup entry retroactively adjust the streak counter? — Owner: user. Block: no (implementation decision; `/10x-plan standup-entry-edit-delete` should resolve explicitly; either approach is valid as long as behavior is consistent and communicated to the user).
 - **Risk:** edit and delete are mutations on entries that the streak counter (S-03) may have already processed; the interaction between entry mutation and derived state (streak, confirmed blocker alerts from S-04) should be scoped explicitly in `/10x-plan` to avoid inconsistent state
-- **Status:** proposed
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -191,3 +191,4 @@ Non-blocking implementation questions (do not block planning; surface at `/10x-p
 - **S-03: member can submit a standup (did and plan required; blockers optional), immediately see their history list, and see their streak counter showing consecutive business days logged (Mon–Fri; weekend gaps do not reset the streak).** — Archived 2026-06-06 → `context/archive/2026-06-05-standup-submission-and-history/`. Lesson: —.
 - **S-04: when a member submits two or more consecutive business-day standups with similar blocker content, a match suggestion is surfaced; the member confirms or dismisses the suggestion; a confirmed match fires a blocker alert visible in the member's history.** — Archived 2026-06-26 → `context/archive/2026-06-05-blocker-detection-flow/`. Lesson: —.
 - **S-05: Team Lead can open the team feed and see today's standup entries for all workspace members (with "No standup yet" placeholders for members who haven't submitted), confirmed blocker alerts for any member, and can configure the workspace's alert threshold (default: 2 consecutive business days).** — Archived 2026-06-27 → `context/archive/2026-06-05-team-feed-and-alerts/`. Lesson: —.
+- **S-06: member can edit or delete their own previously submitted standup entry.** — Archived 2026-06-27 → `context/archive/2026-06-05-standup-entry-edit-delete/`. Lesson: —.
