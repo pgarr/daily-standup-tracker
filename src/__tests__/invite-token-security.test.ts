@@ -111,14 +111,21 @@ describe.skipIf(!supabaseAvailable)(
     });
 
     afterAll(async () => {
-      if (workspaceId) await svc.from("workspace").delete().eq("id", workspaceId);
+      if (workspaceId) {
+        const { error } = await svc.from("workspace").delete().eq("id", workspaceId);
+        if (error) console.warn("workspace cleanup failed:", error.message);
+      }
       for (const uid of [userAId, userBTargetId, userCId].filter(Boolean)) {
         await svc.auth.admin.deleteUser(uid);
       }
     });
 
     it("positive: user-a workspace_member row exists after first acceptance", async () => {
-      const { data } = await createUserClient(userAToken).from("workspace_member").select("role").maybeSingle();
+      const { data } = await createUserClient(userAToken)
+        .from("workspace_member")
+        .select("role")
+        .eq("workspace_id", workspaceId)
+        .maybeSingle();
       expect(data?.role).toBe("member");
     });
 

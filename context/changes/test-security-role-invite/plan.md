@@ -362,31 +362,31 @@ globalTeardown: "./e2e/global-teardown.ts",
 ### Phase 1: Vitest invite-token security tests
 
 #### Automated
-- [x] 1.1 Write `src/__tests__/invite-token-security.test.ts` with `beforeAll`, `afterAll`, and 4 tests
-- [x] 1.2 `npm test` exits 0 (4 tests pass or 1 skip line if Supabase not running)
-- [x] 1.3 `npm run lint` exits 0
-- [x] 1.4 `npm run build` exits 0
+- [x] 1.1 Write `src/__tests__/invite-token-security.test.ts` with `beforeAll`, `afterAll`, and 4 tests — b0e7614
+- [x] 1.2 `npm test` exits 0 (4 tests pass or 1 skip line if Supabase not running) — b0e7614
+- [x] 1.3 `npm run lint` exits 0 — b0e7614
+- [x] 1.4 `npm run build` exits 0 — b0e7614
 
 #### Manual
-- [x] 1.5 Confirm all 4 tests show as green when `npx supabase start` is running
-- [x] 1.6 Confirm 1 skip line (not a failure) when Supabase is stopped
-- [x] 1.7 Confirm positive test "user-a workspace_member row exists" appears green in output
+- [x] 1.5 Confirm all 4 tests show as green when `npx supabase start` is running — b0e7614
+- [x] 1.6 Confirm 1 skip line (not a failure) when Supabase is stopped — b0e7614
+- [x] 1.7 Confirm positive test "user-a workspace_member row exists" appears green in output — b0e7614
 
 ### Phase 2: Playwright globalSetup + role-gating spec
 
 #### Automated
-- [ ] 2.1 Add `.auth/` to `.gitignore`
-- [ ] 2.2 Write `e2e/global-setup.ts`
-- [ ] 2.3 Write `e2e/global-teardown.ts`
-- [ ] 2.4 Write `e2e/role-gating.spec.ts`
-- [ ] 2.5 Update `playwright.config.ts` with `globalSetup`/`globalTeardown`
-- [ ] 2.6 `npx playwright test` exits 0 (middleware-gate tests always pass; role-gating tests pass or skip)
-- [ ] 2.7 `npm run lint` exits 0
-- [ ] 2.8 `npm run build` exits 0
+- [x] 2.1 Add `.auth/` to `.gitignore`
+- [x] 2.2 Write `e2e/global-setup.ts`
+- [x] 2.3 Write `e2e/global-teardown.ts`
+- [x] 2.4 Write `e2e/role-gating.spec.ts`
+- [x] 2.5 Update `playwright.config.ts` with `globalSetup`/`globalTeardown`
+- [x] 2.6 `npx playwright test` exits 0 (middleware-gate tests always pass; role-gating tests pass or skip)
+- [x] 2.7 `npm run lint` exits 0
+- [x] 2.8 `npm run build` exits 0
 
 #### Manual
-- [ ] 2.9 Confirm role-gating tests pass with local Supabase + dev server running
-- [ ] 2.10 Confirm member session is rejected (302 /dashboard confirmed in output)
-- [ ] 2.11 Confirm team_lead session is accepted (200 confirmed in output)
-- [ ] 2.12 Confirm role-gating tests skip (not fail) when Supabase is stopped
-- [ ] 2.13 Confirm workspace + users are gone from Supabase Studio after teardown
+- [x] 2.9 Confirm role-gating tests pass with local Supabase + dev server running
+- [x] 2.10 Confirm member session is rejected (302 /dashboard confirmed in output)
+- [x] 2.11 Confirm team_lead session is accepted (200 confirmed in output)
+- [x] 2.12 Confirm role-gating tests skip (not fail) when Supabase is stopped
+- [x] 2.13 Confirm workspace + users are gone from Supabase Studio after teardown
