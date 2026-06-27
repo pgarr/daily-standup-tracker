@@ -292,17 +292,17 @@ For MVP team sizes (small per PRD), the workspace-scoped `standup_entries` query
 
 #### Automated
 
-- [x] 3.1 Build passes
-- [x] 3.2 Lint passes
+- [x] 3.1 Build passes — 8ff7251
+- [x] 3.2 Lint passes — 8ff7251
 
 #### Manual
 
-- [x] 3.3 Team Lead sees "Team Feed" nav link; Member does not
-- [x] 3.4 /team-feed redirects Member to /dashboard
-- [x] 3.5 Feed shows today's date by default with all workspace members
-- [x] 3.6 Submitted member cards show full did / plan / blockers
-- [x] 3.7 Not-submitted members show muted placeholder with email
-- [x] 3.8 Confirmed blocker alert shows badge on that member's card
-- [x] 3.9 Previous/Next navigation steps correctly across business days (including weekends)
-- [x] 3.10 Next hidden/disabled at today; Previous hidden/disabled at lower clamp
-- [x] 3.11 Threshold form saves and shows success message
+- [x] 3.3 Team Lead sees "Team Feed" nav link; Member does not — 8ff7251
+- [x] 3.4 /team-feed redirects Member to /dashboard — 8ff7251
+- [x] 3.5 Feed shows today's date by default with all workspace members — 8ff7251
+- [x] 3.6 Submitted member cards show full did / plan / blockers — 8ff7251
+- [x] 3.7 Not-submitted members show muted placeholder with email — 8ff7251
+- [x] 3.8 Confirmed blocker alert shows badge on that member's card — 8ff7251
+- [x] 3.9 Previous/Next navigation steps correctly across business days (including weekends) — 8ff7251
+- [x] 3.10 Next hidden/disabled at today; Previous hidden/disabled at lower clamp — 8ff7251
+- [x] 3.11 Threshold form saves and shows success message — 8ff7251
