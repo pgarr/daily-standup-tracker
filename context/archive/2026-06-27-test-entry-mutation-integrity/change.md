@@ -1,10 +1,10 @@
 ---
 change_id: test-entry-mutation-integrity
 title: Test entry mutation integrity
-status: impl_reviewed
+status: archived
 created: 2026-06-27
 updated: 2026-06-27
-archived_at: null
+archived_at: 2026-06-27T20:09:14Z
 ---
 
 ## Notes
