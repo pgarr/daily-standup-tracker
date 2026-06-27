@@ -315,34 +315,34 @@ Add a unit test documenting the delete-in-streak-middle behavior, and a Playwrig
 
 #### Automated
 
-- [x] 2.1 Build passes
-- [x] 2.2 Type checking and lint passes
-- [x] 2.3 Route coverage test passes
+- [x] 2.1 Build passes — 1d2c8be
+- [x] 2.2 Type checking and lint passes — 1d2c8be
+- [x] 2.3 Route coverage test passes — 1d2c8be
 
 #### Manual
 
-- [x] 2.4 POST /api/standup/update updates owned entry and redirects to success
-- [x] 2.5 POST /api/standup/update with non-existent ID redirects with error
-- [x] 2.6 POST /api/standup/delete deletes owned entry and redirects to success
-- [x] 2.7 POST /api/standup/delete for another member's entry redirects with error
-- [x] 2.8 Unauthenticated POST to either route redirects to signin
+- [x] 2.4 POST /api/standup/update updates owned entry and redirects to success — 1d2c8be
+- [x] 2.5 POST /api/standup/update with non-existent ID redirects with error — 1d2c8be
+- [x] 2.6 POST /api/standup/delete deletes owned entry and redirects to success — 1d2c8be
+- [x] 2.7 POST /api/standup/delete for another member's entry redirects with error — 1d2c8be
+- [x] 2.8 Unauthenticated POST to either route redirects to signin — 1d2c8be
 
 ### Phase 3: Frontend — StandupHistoryList React Island
 
 #### Automated
 
-- [ ] 3.1 Build passes
-- [ ] 3.2 Type checking and lint passes
+- [x] 3.1 Build passes
+- [x] 3.2 Type checking and lint passes
 
 #### Manual
 
-- [ ] 3.3 History list renders identically to current design
-- [ ] 3.4 Edit button expands inline form pre-filled with entry content
-- [ ] 3.5 Edit save redirects to success; updated content visible; success flash shown
-- [ ] 3.6 Delete cancel restores original card view
-- [ ] 3.7 Delete confirm redirects to success; entry absent; streak updated
-- [ ] 3.8 Today's top card unchanged; its history copy has affordances
-- [ ] 3.9 No regressions in blocker banner, streak, or submission form
+- [x] 3.3 History list renders identically to current design
+- [x] 3.4 Edit button expands inline form pre-filled with entry content
+- [x] 3.5 Edit save redirects to success; updated content visible; success flash shown
+- [x] 3.6 Delete cancel restores original card view
+- [x] 3.7 Delete confirm redirects to success; entry absent; streak updated
+- [x] 3.8 Today's top card unchanged; its history copy has affordances
+- [x] 3.9 No regressions in blocker banner, streak, or submission form
 
 ### Phase 4: Tests — Streak Unit Test + E2E API Tests
 
