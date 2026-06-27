@@ -1,9 +1,9 @@
 ---
 change_id: team-feed-and-alerts
 title: Team feed and alerts
-status: new
+status: implementing
 created: 2026-06-05
-updated: 2026-06-05
+updated: 2026-06-27
 archived_at: null
 ---
 
