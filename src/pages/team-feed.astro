@@ -1,0 +1,238 @@
+---
+import AppLayout from "@/layouts/AppLayout.astro";
+import { createClient } from "@/lib/supabase";
+import type { StandupEntry, BlockerAlert } from "@/types";
+
+interface MemberRow {
+  user_id: string;
+  email: string;
+}
+
+const { workspace, workspaceMember } = Astro.locals;
+
+if (workspaceMember?.role !== "team_lead") {
+  return Astro.redirect("/dashboard");
+}
+if (!workspace) {
+  return Astro.redirect("/dashboard");
+}
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+if (!supabase) {
+  return Astro.redirect(`/team-feed?error=${encodeURIComponent("Supabase is not configured")}`);
+}
+
+// Date helpers — operate on YYYY-MM-DD strings via UTC to avoid timezone shifts
+function addDays(d: string, n: number): string {
+  const date = new Date(d + "T00:00:00Z");
+  date.setUTCDate(date.getUTCDate() + n);
+  return date.toISOString().slice(0, 10);
+}
+
+function prevBusinessDay(d: string): string {
+  const result = addDays(d, -1);
+  const day = new Date(result + "T00:00:00Z").getUTCDay(); // 0=Sun, 6=Sat
+  if (day === 0) return addDays(result, -2); // Sun → Fri
+  if (day === 6) return addDays(result, -1); // Sat → Fri
+  return result;
+}
+
+function nextBusinessDay(d: string): string {
+  const result = addDays(d, 1);
+  const day = new Date(result + "T00:00:00Z").getUTCDay();
+  if (day === 6) return addDays(result, 2); // Sat → Mon
+  if (day === 0) return addDays(result, 1); // Sun → Mon
+  return result;
+}
+
+const today = new Date().toISOString().slice(0, 10);
+const lowerClamp = addDays(today, -10);
+
+const rawDate = Astro.url.searchParams.get("date");
+let selectedDate = rawDate && /^\d{4}-\d{2}-\d{2}$/.test(rawDate) ? rawDate : today;
+
+// Clamp to [lowerClamp, today]
+if (selectedDate > today) selectedDate = today;
+if (selectedDate < lowerClamp) selectedDate = lowerClamp;
+
+// Snap weekend dates to the preceding Friday
+const selectedDow = new Date(selectedDate + "T00:00:00Z").getUTCDay();
+if (selectedDow === 6) selectedDate = addDays(selectedDate, -1); // Sat → Fri
+if (selectedDow === 0) selectedDate = addDays(selectedDate, -2); // Sun → Fri
+
+const prevDate = prevBusinessDay(selectedDate);
+const nextDate = nextBusinessDay(selectedDate);
+const canGoPrev = prevDate >= lowerClamp;
+const canGoNext = selectedDate < today;
+
+const [membersResult, entriesResult, alertsResult] = await Promise.all([
+  supabase.rpc("get_workspace_member_emails"),
+  supabase.from("standup_entries").select("*").eq("workspace_id", workspace.id).eq("submitted_date", selectedDate),
+  supabase
+    .from("blocker_alerts")
+    .select("*")
+    .eq("workspace_id", workspace.id)
+    .eq("trigger_date", selectedDate)
+    .eq("status", "confirmed"),
+]);
+
+if (membersResult.error || entriesResult.error || alertsResult.error) {
+  return Astro.redirect(`/team-feed?error=${encodeURIComponent("Failed to load team feed data")}`);
+}
+
+const members = ((membersResult.data as MemberRow[] | null) ?? []).sort((a, b) => a.email.localeCompare(b.email));
+const entryByUserId = Object.fromEntries(
+  ((entriesResult.data as StandupEntry[] | null) ?? []).map((e) => [e.user_id, e]),
+) as Record<string, StandupEntry | undefined>;
+const alertByUserId = Object.fromEntries(
+  ((alertsResult.data as BlockerAlert[] | null) ?? []).map((a) => [a.user_id, a]),
+) as Record<string, BlockerAlert | undefined>;
+
+const success = Astro.url.searchParams.get("success");
+const error = Astro.url.searchParams.get("error");
+---
+
+<AppLayout title="Team Feed">
+  <div class="p-4 md:p-8">
+    <div class="mx-auto max-w-3xl space-y-6">
+      <!-- Header with date navigation -->
+      <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl">
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <h1 class="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-2xl font-bold text-transparent">
+              Team Feed
+            </h1>
+            <p class="mt-1 text-sm text-blue-100/60">Viewing standups for {selectedDate}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            {
+              canGoPrev ? (
+                <a
+                  href={`/team-feed?date=${prevDate}`}
+                  class="rounded-lg border border-white/20 bg-white/5 px-3 py-1 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                >
+                  ← Prev
+                </a>
+              ) : (
+                <span class="cursor-not-allowed rounded-lg border border-white/10 px-3 py-1 text-sm text-white/30">
+                  ← Prev
+                </span>
+              )
+            }
+            {
+              canGoNext ? (
+                <a
+                  href={`/team-feed?date=${nextDate}`}
+                  class="rounded-lg border border-white/20 bg-white/5 px-3 py-1 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                >
+                  Next →
+                </a>
+              ) : (
+                <span class="cursor-not-allowed rounded-lg border border-white/10 px-3 py-1 text-sm text-white/30">
+                  Next →
+                </span>
+              )
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Status feedback -->
+      {
+        success === "threshold_updated" && (
+          <div class="rounded-xl border border-green-500/30 bg-green-900/30 px-4 py-3 text-sm text-green-300">
+            Alert threshold updated successfully.
+          </div>
+        )
+      }
+      {
+        error && (
+          <div class="rounded-xl border border-red-500/30 bg-red-900/30 px-4 py-3 text-sm text-red-300">{error}</div>
+        )
+      }
+
+      <!-- Alert threshold form -->
+      <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl">
+        <h2 class="mb-4 text-sm font-semibold tracking-wider text-blue-100/60 uppercase">Alert Threshold</h2>
+        <form method="POST" action="/api/workspace/update-threshold" class="flex flex-wrap items-center gap-3">
+          <label for="threshold" class="text-sm text-blue-100/80">Alert after</label>
+          <input
+            type="number"
+            id="threshold"
+            name="threshold"
+            min="1"
+            value={workspace.alert_threshold}
+            class="w-20 [appearance:textfield] rounded-lg border border-white/20 bg-white/5 px-3 py-1.5 text-sm text-white [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          />
+          <span class="text-sm text-blue-100/80">consecutive days with blockers</span>
+          <button
+            type="submit"
+            class="rounded-lg border border-purple-500/30 bg-purple-500/20 px-4 py-1.5 text-sm text-purple-200 transition-colors hover:bg-purple-500/30"
+          >
+            Save
+          </button>
+        </form>
+      </div>
+
+      <!-- Member cards -->
+      <section>
+        <h2 class="mb-3 text-sm font-medium tracking-wide text-blue-100/60 uppercase">
+          Team ({members.length}
+          {members.length === 1 ? "member" : "members"})
+        </h2>
+        {
+          members.length === 0 ? (
+            <p class="text-sm text-blue-100/40">No workspace members yet.</p>
+          ) : (
+            <div class="space-y-3">
+              {members.map((member) => {
+                const entry = entryByUserId[member.user_id];
+                const hasAlert = Boolean(alertByUserId[member.user_id]);
+                return entry ? (
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-white backdrop-blur-xl">
+                    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                      <span class="truncate text-sm font-medium text-purple-300">{member.email}</span>
+                      <div class="flex shrink-0 items-center gap-2">
+                        <span class="rounded-full border border-green-400/40 bg-green-500/20 px-2 py-0.5 text-xs font-medium text-green-300">
+                          Submitted ✓
+                        </span>
+                        {hasAlert && (
+                          <span class="rounded-full border border-red-400/40 bg-red-500/20 px-2 py-0.5 text-xs font-medium text-red-300">
+                            ⚠ Recurring Blocker
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div class="space-y-3">
+                      <div>
+                        <p class="mb-1 text-xs font-medium tracking-wide text-blue-100/50 uppercase">What they did</p>
+                        <p class="text-sm whitespace-pre-wrap text-blue-100/80">{entry.did}</p>
+                      </div>
+                      <div>
+                        <p class="mb-1 text-xs font-medium tracking-wide text-blue-100/50 uppercase">Plan</p>
+                        <p class="text-sm whitespace-pre-wrap text-blue-100/80">{entry.plan}</p>
+                      </div>
+                      {entry.blockers && (
+                        <div>
+                          <p class="mb-1 text-xs font-medium tracking-wide text-blue-100/50 uppercase">Blockers</p>
+                          <p class="text-sm whitespace-pre-wrap text-blue-100/80">{entry.blockers}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div class="rounded-xl border border-dashed border-white/20 bg-white/5 p-4 text-white opacity-60 backdrop-blur-xl">
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="truncate text-sm font-medium text-purple-300/70">{member.email}</span>
+                      <span class="shrink-0 text-xs text-blue-100/40">No standup yet</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )
+        }
+      </section>
+    </div>
+  </div>
+</AppLayout>

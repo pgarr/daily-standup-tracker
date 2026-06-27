@@ -279,30 +279,30 @@ For MVP team sizes (small per PRD), the workspace-scoped `standup_entries` query
 
 #### Automated
 
-- [x] 2.1 Build passes
-- [x] 2.2 Lint passes
+- [x] 2.1 Build passes — 0be8621
+- [x] 2.2 Lint passes — 0be8621
 
 #### Manual
 
-- [x] 2.3 Team Lead POST updates alert_threshold and redirects to /team-feed?success=threshold_updated
-- [x] 2.4 Member POST redirects with error (role check fires)
-- [x] 2.5 Unauthenticated GET /team-feed redirects to /auth/signin
+- [x] 2.3 Team Lead POST updates alert_threshold and redirects to /team-feed?success=threshold_updated — 0be8621
+- [x] 2.4 Member POST redirects with error (role check fires) — 0be8621
+- [x] 2.5 Unauthenticated GET /team-feed redirects to /auth/signin — 0be8621
 
 ### Phase 3: Team Feed Page + Topbar Update
 
 #### Automated
 
-- [ ] 3.1 Build passes
-- [ ] 3.2 Lint passes
+- [x] 3.1 Build passes
+- [x] 3.2 Lint passes
 
 #### Manual
 
-- [ ] 3.3 Team Lead sees "Team Feed" nav link; Member does not
-- [ ] 3.4 /team-feed redirects Member to /dashboard
-- [ ] 3.5 Feed shows today's date by default with all workspace members
-- [ ] 3.6 Submitted member cards show full did / plan / blockers
-- [ ] 3.7 Not-submitted members show muted placeholder with email
-- [ ] 3.8 Confirmed blocker alert shows badge on that member's card
-- [ ] 3.9 Previous/Next navigation steps correctly across business days (including weekends)
-- [ ] 3.10 Next hidden/disabled at today; Previous hidden/disabled at lower clamp
-- [ ] 3.11 Threshold form saves and shows success message
+- [x] 3.3 Team Lead sees "Team Feed" nav link; Member does not
+- [x] 3.4 /team-feed redirects Member to /dashboard
+- [x] 3.5 Feed shows today's date by default with all workspace members
+- [x] 3.6 Submitted member cards show full did / plan / blockers
+- [x] 3.7 Not-submitted members show muted placeholder with email
+- [x] 3.8 Confirmed blocker alert shows badge on that member's card
+- [x] 3.9 Previous/Next navigation steps correctly across business days (including weekends)
+- [x] 3.10 Next hidden/disabled at today; Previous hidden/disabled at lower clamp
+- [x] 3.11 Threshold form saves and shows success message
