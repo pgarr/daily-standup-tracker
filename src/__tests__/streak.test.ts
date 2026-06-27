@@ -50,6 +50,16 @@ describe("calculateStreak", () => {
     expect(calculateStreak(entries)).toBe(1);
   });
 
+  it("returns 2 after the most-recent entry is removed — streak recomputes from the new head", () => {
+    // FR-008: deleting an entry recalculates streak on the next page load.
+    // [Wed, Tue, Mon] → streak 3; removing Wed leaves [Tue, Mon] → streak 2.
+    const entries = [
+      { submitted_date: "2026-06-02" }, // Tuesday (new head after Wed removed)
+      { submitted_date: "2026-06-01" }, // Monday
+    ];
+    expect(calculateStreak(entries)).toBe(2);
+  });
+
   describe("timezone boundary", () => {
     // Tests 6a and 6b document the storage contract for S-03:
     // submitted_date MUST be the user's local business date, not the UTC date.

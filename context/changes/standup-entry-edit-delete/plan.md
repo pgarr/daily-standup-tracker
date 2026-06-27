@@ -331,30 +331,30 @@ Add a unit test documenting the delete-in-streak-middle behavior, and a Playwrig
 
 #### Automated
 
-- [x] 3.1 Build passes
-- [x] 3.2 Type checking and lint passes
+- [x] 3.1 Build passes — a2b445a
+- [x] 3.2 Type checking and lint passes — a2b445a
 
 #### Manual
 
-- [x] 3.3 History list renders identically to current design
-- [x] 3.4 Edit button expands inline form pre-filled with entry content
-- [x] 3.5 Edit save redirects to success; updated content visible; success flash shown
-- [x] 3.6 Delete cancel restores original card view
-- [x] 3.7 Delete confirm redirects to success; entry absent; streak updated
-- [x] 3.8 Today's top card unchanged; its history copy has affordances
-- [x] 3.9 No regressions in blocker banner, streak, or submission form
+- [x] 3.3 History list renders identically to current design — a2b445a
+- [x] 3.4 Edit button expands inline form pre-filled with entry content — a2b445a
+- [x] 3.5 Edit save redirects to success; updated content visible; success flash shown — a2b445a
+- [x] 3.6 Delete cancel restores original card view — a2b445a
+- [x] 3.7 Delete confirm redirects to success; entry absent; streak updated — a2b445a
+- [x] 3.8 Today's top card unchanged; its history copy has affordances — a2b445a
+- [x] 3.9 No regressions in blocker banner, streak, or submission form — a2b445a
 
 ### Phase 4: Tests — Streak Unit Test + E2E API Tests
 
 #### Automated
 
-- [ ] 4.1 Vitest streak tests pass (new test + existing)
-- [ ] 4.2 Playwright edit/delete spec passes with local Supabase
-- [ ] 4.3 Playwright spec gracefully skips without Supabase
-- [ ] 4.4 Build passes
-- [ ] 4.5 Full lint passes
+- [x] 4.1 Vitest streak tests pass (new test + existing)
+- [x] 4.2 Playwright edit/delete spec passes with local Supabase
+- [x] 4.3 Playwright spec gracefully skips without Supabase
+- [x] 4.4 Build passes
+- [x] 4.5 Full lint passes
 
 #### Manual
 
-- [ ] 4.6 npx vitest run — no regressions in existing streak tests
-- [ ] 4.7 npx playwright test — no regressions in middleware-gate or role-gating specs
+- [x] 4.6 npx vitest run — no regressions in existing streak tests
+- [x] 4.7 npx playwright test — no regressions in middleware-gate or role-gating specs

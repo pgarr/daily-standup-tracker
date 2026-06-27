@@ -47,9 +47,10 @@ export const POST: APIRoute = async (context) => {
   }
 
   const { id, did, plan, blockers } = result.data;
+  const trimmedBlockers = blockers?.trim() ?? "";
   const { error, count } = await supabase
     .from("standup_entries")
-    .update({ did, plan, blockers: blockers?.trim() ?? null }, { count: "exact" })
+    .update({ did, plan, blockers: trimmedBlockers !== "" ? trimmedBlockers : null }, { count: "exact" })
     .eq("id", id)
     .eq("user_id", user.id);
 
