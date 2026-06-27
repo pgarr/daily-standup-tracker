@@ -44,6 +44,13 @@
 - **Rule**: Every POST endpoint that accepts form submissions must check the `Origin` or `Referer` header against the app's own origin (`context.url.origin`) at the top of the handler. Return 403 on mismatch. Pattern: parse the header with `new URL(...)` and compare `.origin` fields. Absence of the header is permissive (may be a direct API call).
 - **Applies to**: plan, plan-review, implement, impl-review
 
+## Conditional CSRF guard is bypassable by clients omitting Origin and Referer
+
+- **Context**: POST form endpoints in `src/pages/api/` (e.g. `update.ts`, `delete.ts`, `submit.ts`, `invite-cancel.ts`) — any endpoint that accepts HTML form submissions with potentially destructive effects.
+- **Problem**: The `if (requestOrigin)` guard only validates the Origin/Referer header when it is present; clients that omit both headers (curl, server-to-server fetch, scripted tools) bypass CSRF validation entirely. For SameSite=Lax cookies this limits browser-originating CSRF, but non-browser callers are unrestricted. Hit during standup-entry-edit-delete impl-review (F3).
+- **Rule**: [Fill in: e.g. "When introducing a new security hardening change for POST endpoints, require Origin/Referer unconditionally (return 403 when absent) rather than guarding conditionally. Apply the change to all POST endpoints in the same PR to avoid a mixed-posture codebase."]
+- **Applies to**: [Fill in: e.g. "plan, plan-review, implement, impl-review — any change that touches or adds POST form endpoints."]
+
 ## Silent LLM fallback can mask model deprecation or API failures
 
 - **Context**: src/lib/similarity.ts — haikuSimilarity catches all Anthropic API errors and falls back to Jaccard similarity without surfacing the failure to callers or operators.

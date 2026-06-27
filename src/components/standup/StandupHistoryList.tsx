@@ -102,13 +102,23 @@ export default function StandupHistoryList({ entries, blockerAlerts }: Props) {
               </div>
 
               {isEditing ? (
-                <form method="POST" action="/api/standup/update" onSubmit={handleEditSubmit} className="space-y-3">
+                <form
+                  method="POST"
+                  action="/api/standup/update"
+                  onSubmit={handleEditSubmit}
+                  className="space-y-3"
+                  noValidate
+                >
                   <input type="hidden" name="id" value={entry.id} />
                   <div>
-                    <label className="mb-1 block text-xs font-medium tracking-wide text-blue-100/50 uppercase">
+                    <label
+                      htmlFor="edit-did"
+                      className="mb-1 block text-xs font-medium tracking-wide text-blue-100/50 uppercase"
+                    >
                       What you did
                     </label>
                     <textarea
+                      id="edit-did"
                       name="did"
                       rows={3}
                       className={textareaBase}
@@ -121,10 +131,14 @@ export default function StandupHistoryList({ entries, blockerAlerts }: Props) {
                     {didError && <p className="mt-1 text-xs text-red-400">{didError}</p>}
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-medium tracking-wide text-blue-100/50 uppercase">
+                    <label
+                      htmlFor="edit-plan"
+                      className="mb-1 block text-xs font-medium tracking-wide text-blue-100/50 uppercase"
+                    >
                       Plan
                     </label>
                     <textarea
+                      id="edit-plan"
                       name="plan"
                       rows={3}
                       className={textareaBase}
@@ -137,10 +151,14 @@ export default function StandupHistoryList({ entries, blockerAlerts }: Props) {
                     {planError && <p className="mt-1 text-xs text-red-400">{planError}</p>}
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-medium tracking-wide text-blue-100/50 uppercase">
+                    <label
+                      htmlFor="edit-blockers"
+                      className="mb-1 block text-xs font-medium tracking-wide text-blue-100/50 uppercase"
+                    >
                       Blockers
                     </label>
                     <textarea
+                      id="edit-blockers"
                       name="blockers"
                       rows={2}
                       className={textareaBase}
