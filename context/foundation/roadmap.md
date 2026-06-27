@@ -3,7 +3,7 @@ project: "Daily Standup Tracker"
 version: 2
 status: draft
 created: 2026-06-04
-updated: 2026-06-26
+updated: 2026-06-27
 prd_version: 3
 main_goal: market-feedback
 top_blocker: time
@@ -32,7 +32,7 @@ Developers and knowledge workers have no dedicated home for their daily standup 
 | S-02 | member-invite-and-join         | Team Lead invites a member by email; invited user joins the workspace as a Member               | S-01                   | FR-004, FR-005                       | done     |
 | S-03 | standup-submission-and-history | submit a standup, view their history list, and see their streak                                  | S-01                   | FR-006, FR-009, FR-011, US-01        | done     |
 | S-04 | blocker-detection-flow         | submit two similar consecutive blockers, see a match suggestion, confirm it, and see an alert    | S-03                   | FR-012, US-02                        | done     |
-| S-05 | team-feed-and-alerts           | view the team feed with today's entries, confirmed alerts, and configure the alert threshold     | S-01, S-02, S-03, S-04 | FR-013, FR-014, FR-015, US-03        | proposed |
+| S-05 | team-feed-and-alerts           | view the team feed with today's entries, confirmed alerts, and configure the alert threshold     | S-01, S-02, S-03, S-04 | FR-013, FR-014, FR-015, US-03        | done     |
 | S-06 | standup-entry-edit-delete      | edit or delete their own previously submitted standup entry                                      | S-03                   | FR-007, FR-008                       | proposed |
 
 ## Streams
@@ -135,7 +135,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** this is the north star and the most integration-heavy slice — it reads from workspace members (S-01/S-02), standup entries (S-03), and blocker alerts (S-04); any upstream schema or RLS gap surfaces here; also the first slice where Team Lead role gating is exercised end-to-end
-- **Status:** proposed
+- **Status:** done
 
 ### S-06: standup-entry-edit-delete
 
@@ -190,3 +190,4 @@ Non-blocking implementation questions (do not block planning; surface at `/10x-p
 - **S-02: Team Lead can send an email invite to a new member; the invited user registers via the invite link and appears in the workspace as a Member.** — Archived 2026-06-06 → `context/archive/2026-06-05-member-invite-and-join/`. Lesson: —.
 - **S-03: member can submit a standup (did and plan required; blockers optional), immediately see their history list, and see their streak counter showing consecutive business days logged (Mon–Fri; weekend gaps do not reset the streak).** — Archived 2026-06-06 → `context/archive/2026-06-05-standup-submission-and-history/`. Lesson: —.
 - **S-04: when a member submits two or more consecutive business-day standups with similar blocker content, a match suggestion is surfaced; the member confirms or dismisses the suggestion; a confirmed match fires a blocker alert visible in the member's history.** — Archived 2026-06-26 → `context/archive/2026-06-05-blocker-detection-flow/`. Lesson: —.
+- **S-05: Team Lead can open the team feed and see today's standup entries for all workspace members (with "No standup yet" placeholders for members who haven't submitted), confirmed blocker alerts for any member, and can configure the workspace's alert threshold (default: 2 consecutive business days).** — Archived 2026-06-27 → `context/archive/2026-06-05-team-feed-and-alerts/`. Lesson: —.
