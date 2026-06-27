@@ -22,6 +22,8 @@ const EXPLICIT_PUBLIC_ROUTES = new Set([
   "/api/workspace/invite-cancel", // inline auth + team_lead guard
   "/api/workspace/accept-invite", // inline auth guard
   "/api/standup/submit", // inline auth guard
+  "/api/standup/update", // inline auth guard
+  "/api/standup/delete", // inline auth guard
   "/api/workspace/update-threshold", // inline auth + team_lead guard
   "/auth/accept-invite", // intentionally public — pre-auth invite acceptance page
 ]);

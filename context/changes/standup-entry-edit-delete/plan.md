@@ -300,32 +300,32 @@ Add a unit test documenting the delete-in-streak-middle behavior, and a Playwrig
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly against local Supabase
-- [x] 1.2 Linting passes
-- [x] 1.3 Build passes
+- [x] 1.1 Migration applies cleanly against local Supabase — afc9731
+- [x] 1.2 Linting passes — afc9731
+- [x] 1.3 Build passes — afc9731
 
 #### Manual
 
-- [x] 1.4 Member session can UPDATE their own row
-- [x] 1.5 Member session cannot UPDATE another member's row
-- [x] 1.6 Member session can DELETE their own row
-- [x] 1.7 Member session cannot DELETE another member's row
+- [x] 1.4 Member session can UPDATE their own row — afc9731
+- [x] 1.5 Member session cannot UPDATE another member's row — afc9731
+- [x] 1.6 Member session can DELETE their own row — afc9731
+- [x] 1.7 Member session cannot DELETE another member's row — afc9731
 
 ### Phase 2: Backend — Update and Delete API Routes
 
 #### Automated
 
-- [ ] 2.1 Build passes
-- [ ] 2.2 Type checking and lint passes
-- [ ] 2.3 Route coverage test passes
+- [x] 2.1 Build passes
+- [x] 2.2 Type checking and lint passes
+- [x] 2.3 Route coverage test passes
 
 #### Manual
 
-- [ ] 2.4 POST /api/standup/update updates owned entry and redirects to success
-- [ ] 2.5 POST /api/standup/update with non-existent ID redirects with error
-- [ ] 2.6 POST /api/standup/delete deletes owned entry and redirects to success
-- [ ] 2.7 POST /api/standup/delete for another member's entry redirects with error
-- [ ] 2.8 Unauthenticated POST to either route redirects to signin
+- [x] 2.4 POST /api/standup/update updates owned entry and redirects to success
+- [x] 2.5 POST /api/standup/update with non-existent ID redirects with error
+- [x] 2.6 POST /api/standup/delete deletes owned entry and redirects to success
+- [x] 2.7 POST /api/standup/delete for another member's entry redirects with error
+- [x] 2.8 Unauthenticated POST to either route redirects to signin
 
 ### Phase 3: Frontend — StandupHistoryList React Island
 
