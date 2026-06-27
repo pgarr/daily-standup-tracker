@@ -168,11 +168,11 @@ Constants:
 
 #### Automated Verification
 
-- [x] 1.1 Lint passes (npm run lint — 0 errors)
-- [x] 1.2 Build passes (npm run build — clean)
-- [x] 1.3 Spec skips gracefully without Supabase (npx playwright test entry-mutation-integrity — 3 skipped)
+- [x] 1.1 Lint passes (npm run lint — 0 errors) — 51e8208
+- [x] 1.2 Build passes (npm run build — clean) — 51e8208
+- [x] 1.3 Spec skips gracefully without Supabase (npx playwright test entry-mutation-integrity — 3 skipped) — 51e8208
 
 #### Manual Verification
 
-- [x] 1.4 3 tests pass with local Supabase + dev server running
-- [x] 1.5 No fixture leftovers after test run
+- [x] 1.4 3 tests pass with local Supabase + dev server running — 51e8208
+- [x] 1.5 No fixture leftovers after test run — 51e8208
