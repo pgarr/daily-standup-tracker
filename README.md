@@ -1,175 +1,117 @@
-# 10x Astro Starter
+# Daily Standup Tracker
 
-![](./public/template.png)
+A team standup tool where members submit daily did/plan/blockers entries, track their consistency streak, and team leads can monitor the whole team's activity and blocker patterns.
 
-A modern, opinionated starter template for building fast, accessible web applications.
+## What it does
 
-## Tech Stack
+- **Submit standups** — each team member fills in what they did, what they plan, and any blockers, once per business day.
+- **Streak tracking** — the dashboard shows your current consecutive-day streak so you can see how consistent you've been.
+- **Team feed** — team leads see every member's latest standup in a single view.
+- **Blocker detection** — when you submit a blocker, the app uses Claude (Haiku) to compare it against recent entries and flag repeated blockers so the team lead can act.
+- **Edit & delete** — members can correct or remove their own entries; the streak recalculates automatically.
+- **Workspace invitations** — leads invite members by email; role-based access (member vs. team lead) is enforced at the database layer via Supabase RLS.
 
-- [Astro](https://astro.build/) v6 - Modern web framework with server-first rendering
-- [React](https://react.dev/) v19 - UI library for interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4 - Utility-first CSS framework
-- [Supabase](https://supabase.com/) - Authentication and backend-as-a-service
-- [Cloudflare Workers](https://workers.cloudflare.com/) - Edge deployment runtime
+## Tech stack
+
+- [Astro](https://astro.build/) v6 — SSR, server-rendered by default
+- [React](https://react.dev/) v19 — interactive islands
+- [TypeScript](https://www.typescriptlang.org/) v5
+- [Tailwind CSS](https://tailwindcss.com/) v4
+- [Supabase](https://supabase.com/) — auth, Postgres database, row-level security
+- [Cloudflare Workers](https://workers.cloudflare.com/) — edge deployment runtime
+- [Anthropic Claude](https://www.anthropic.com/) — blocker similarity detection (optional; falls back to keyword matching if key is absent)
 
 ## Prerequisites
 
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+- Node.js v22.14.0 (see `.nvmrc`)
+- Docker (for local Supabase)
 
-## Getting Started
+## Running locally
 
-1. Clone the repository:
-
-```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
-```
-
-2. Install dependencies:
+1. Install dependencies:
 
 ```bash
 npm install
 ```
 
-3. Set up Supabase and configure environment variables — see [Supabase Configuration](#supabase-configuration) below.
-
-4. Create a `.dev.vars` file for local Cloudflare dev secrets:
-
-```bash
-cp .env.example .dev.vars
-```
-
-5. Run the development server:
-
-```bash
-npm run dev
-```
-
-## Available Scripts
-
-- `npm run dev` - Start development server (Cloudflare workerd runtime)
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint with type-checked rules
-- `npm run lint:fix` - Auto-fix ESLint issues
-- `npm run format` - Run Prettier
-
-## Project Structure
-
-```md
-.
-├── src/
-│ ├── layouts/ # Astro layouts
-│ ├── pages/ # Astro pages
-│ │ └── api/ # API endpoints
-│ ├── components/ # UI components (Astro & React)
-│ └── assets/ # Static assets
-├── public/ # Public assets
-├── wrangler.jsonc # Cloudflare Workers config
-```
-
-## Supabase Configuration
-
-This project uses [Supabase](https://supabase.com/) for authentication. Environment variables are declared via Astro's `astro:env` schema and are treated as **server-only secrets** — they are never exposed to the client.
-
-### First-time setup (local, no cloud project needed)
-
-Requires [Docker](https://www.docker.com/) and ~7 GB RAM.
-
-1. Create your `.env` file:
+2. Copy the example env files:
 
 ```bash
 cp .env.example .env
+cp .env.example .dev.vars
 ```
 
-2. Initialize the local Supabase project (creates a `supabase/` config folder):
-
-```bash
-npx supabase init
-```
-
-3. Start the local stack (downloads Docker images on first run):
+3. Start the local Supabase stack (downloads Docker images on first run):
 
 ```bash
 npx supabase start
 ```
 
-4. Copy the credentials printed by the CLI into your `.env` and `.dev.vars`:
+Copy the `API URL` and `anon key` printed by the CLI into both `.env` and `.dev.vars`:
 
 ```
 SUPABASE_URL=http://127.0.0.1:54321
-SUPABASE_KEY=<anon key from CLI output>
+SUPABASE_KEY=<anon key>
 ```
 
-5. To stop the stack when done:
+4. Apply migrations:
 
 ```bash
-npx supabase stop
+npx supabase db reset
 ```
 
-The local Studio UI is available at `http://localhost:54323`.
+5. Start the dev server:
 
-No database tables or migrations are required — this project uses Supabase Auth's built-in `auth.users` table only.
-
-### Using a cloud Supabase project instead
-
-If you prefer to use a hosted Supabase project, add these variables to your `.env` and `.dev.vars` files:
-
-| Variable       | Description                                                |
-| -------------- | ---------------------------------------------------------- |
-| `SUPABASE_URL` | Project URL from Supabase dashboard → Settings → API       |
-| `SUPABASE_KEY` | `anon` public key from Supabase dashboard → Settings → API |
-
-```
-SUPABASE_URL=https://<project-ref>.supabase.co
-SUPABASE_KEY=<anon-key>
+```bash
+npm run dev
 ```
 
-### Email confirmation in local development
+The app is available at `http://localhost:4321`. The Supabase Studio UI is at `http://localhost:54323`.
 
-By default Supabase requires email confirmation before a user can sign in. To skip this during local development:
+`ANTHROPIC_API_KEY` is optional — leave it blank and blocker detection falls back to Jaccard keyword similarity.
 
-1. Open the Supabase dashboard for your project
-2. Go to **Authentication → Email → Confirm email**
-3. Toggle it **off**
+## Scripts
 
-Users can then sign in immediately after sign-up without clicking a confirmation link.
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start dev server (Cloudflare workerd runtime) |
+| `npm run build` | Production build |
+| `npm run preview` | Preview production build |
+| `npm run lint` | ESLint with type-checked rules |
+| `npm run lint:fix` | Auto-fix lint issues |
+| `npm run format` | Prettier |
 
-### Auth routes
+## Running tests
 
-| Route                 | Description                                                             |
-| --------------------- | ----------------------------------------------------------------------- |
-| `/auth/signin`        | Email/password sign-in form                                             |
-| `/auth/signup`        | Email/password sign-up form                                             |
-| `/auth/confirm-email` | Post-signup "check your inbox" page                                     |
-| `/dashboard`          | Example protected page (redirects to `/auth/signin` if unauthenticated) |
+Unit tests (Vitest):
 
-Route protection is handled in `src/middleware.ts`. Add paths to the `PROTECTED_ROUTES` array there to require authentication.
+```bash
+npx vitest run
+```
+
+E2E tests (Playwright) — require local Supabase + dev server running:
+
+```bash
+npx playwright test
+```
+
+E2E specs that need Supabase skip automatically in CI when the local stack is not available.
 
 ## Deployment
 
-This project deploys to [Cloudflare Workers](https://workers.cloudflare.com/).
-
-1. Build the project:
-
 ```bash
 npm run build
-```
-
-2. Deploy with Wrangler:
-
-```bash
 npx wrangler deploy
 ```
 
-Set `SUPABASE_URL` and `SUPABASE_KEY` as secrets in your Cloudflare dashboard or via `npx wrangler secret put`.
+Set `SUPABASE_URL`, `SUPABASE_KEY`, and optionally `ANTHROPIC_API_KEY` as secrets in Cloudflare:
+
+```bash
+npx wrangler secret put SUPABASE_URL
+npx wrangler secret put SUPABASE_KEY
+npx wrangler secret put ANTHROPIC_API_KEY
+```
 
 ## CI
 
-GitHub Actions runs lint + build on every push and PR to `master`. Configure `SUPABASE_URL` and `SUPABASE_KEY` as repository secrets in GitHub for the build step.
-
-## License
-
-MIT
+GitHub Actions runs lint + build on every push and PR to `master`. Set `SUPABASE_URL` and `SUPABASE_KEY` as repository secrets for the build step.
