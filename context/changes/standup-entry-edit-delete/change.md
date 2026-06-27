@@ -1,9 +1,9 @@
 ---
 change_id: standup-entry-edit-delete
 title: Standup entry edit delete
-status: new
+status: implementing
 created: 2026-06-05
-updated: 2026-06-05
+updated: 2026-06-27
 archived_at: null
 ---
 
