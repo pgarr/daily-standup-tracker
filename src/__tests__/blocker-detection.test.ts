@@ -30,8 +30,8 @@ describe("blocker detection", () => {
   });
 
   describe("shouldSuggestBlockerMatch", () => {
-    const alwaysMatch: (a: string, b: string) => Promise<boolean> = async () => true;
-    const neverMatch: (a: string, b: string) => Promise<boolean> = async () => false;
+    const alwaysMatch: (a: string, b: string) => Promise<boolean> = () => Promise.resolve(true);
+    const neverMatch: (a: string, b: string) => Promise<boolean> = () => Promise.resolve(false);
     const e = (submitted_date: string, blockers: string | null) => ({ submitted_date, blockers });
 
     it("returns true when threshold met, days consecutive, and blockers similar", async () => {
