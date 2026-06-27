@@ -233,17 +233,22 @@ export default async function globalSetup(): Promise<void> {
 
 ```typescript
 import { existsSync, readFileSync } from "fs";
-import { createServiceClient, isSupabaseRunning } from "../src/__tests__/helpers/supabase-test";
+import { createServiceClient } from "../src/__tests__/helpers/supabase-test";
 import { FIXTURES_PATH } from "./global-setup";
 
 export default async function globalTeardown(): Promise<void> {
   if (!existsSync(FIXTURES_PATH)) return;
-  if (!(await isSupabaseRunning())) return;
   const { teamLead, member, workspaceId } = JSON.parse(readFileSync(FIXTURES_PATH, "utf-8"));
   const svc = createServiceClient();
-  await svc.from("workspace").delete().eq("id", workspaceId); // cascade deletes workspace_member
-  await svc.auth.admin.deleteUser(teamLead.id);
-  await svc.auth.admin.deleteUser(member.id);
+  // Attempt unconditionally — if Supabase is down, log a warning with the IDs
+  // so the developer can clean up manually on the next `npx supabase start`.
+  try {
+    await svc.from("workspace").delete().eq("id", workspaceId); // cascade deletes workspace_member
+    await svc.auth.admin.deleteUser(teamLead.id);
+    await svc.auth.admin.deleteUser(member.id);
+  } catch (err) {
+    console.warn("[teardown] cleanup failed — manually delete workspace", workspaceId, err);
+  }
 }
 ```
 
@@ -257,7 +262,7 @@ export default async function globalTeardown(): Promise<void> {
 
 Both tests use `maxRedirects: 0` to intercept the raw response, consistent with `middleware-gate.spec.ts`.
 
-**Skip condition**: `!existsSync('.auth/test-fixtures.json')` (globalSetup exited early) OR `!supabaseAvailable` (Supabase not reachable at test time). Uses `test.describe.configure({ mode: 'skip' })` behind the condition.
+**Skip condition**: `!existsSync('.auth/test-fixtures.json')` (globalSetup exited early) OR Supabase not reachable at test time. Uses a module-scope `shouldSkip` flag checked via `test.skip(shouldSkip, reason)` inside each test — the valid Playwright API for conditional per-test skip. Note: `test.describe.configure({ mode: 'skip' })` does NOT exist in Playwright (mode only accepts 'default'|'parallel'|'serial'); top-level `await` is also invalid without ESM config. Both are avoided here.
 
 **Authentication**: each context calls `POST /api/auth/signin` with `form: { email, password }`. Playwright follows the redirect to `/dashboard`, storing the Supabase session cookies in the context. All subsequent requests from that context carry the session. The dev server must have Supabase configured — satisfied in local dev by `reuseExistingServer: true` (developer's existing `npm run dev` has `.env` loaded).
 
@@ -269,20 +274,21 @@ import { existsSync, readFileSync } from "fs";
 import { isSupabaseRunning } from "../src/__tests__/helpers/supabase-test";
 import { FIXTURES_PATH } from "./global-setup";
 
-const supabaseAvailable = await isSupabaseRunning();
-const fixturesExist = existsSync(FIXTURES_PATH);
+// Pessimistic default — flipped to false in beforeAll when conditions are met.
+// Avoids top-level await (CommonJS Playwright env) and test.describe.configure({ mode: 'skip' })
+// which is not a valid Playwright API (only 'default'|'parallel'|'serial' are valid modes).
+let shouldSkip = true;
+let teamLeadCtx: Awaited<ReturnType<typeof request.newContext>>;
+let memberCtx: Awaited<ReturnType<typeof request.newContext>>;
 
 test.describe(
   "team-feed role gating (requires local Supabase + npm run dev with Supabase vars)",
   () => {
-    if (!supabaseAvailable || !fixturesExist) {
-      test.describe.configure({ mode: "skip" });
-    }
-
-    let teamLeadCtx: Awaited<ReturnType<typeof request.newContext>>;
-    let memberCtx: Awaited<ReturnType<typeof request.newContext>>;
-
     test.beforeAll(async () => {
+      if (!existsSync(FIXTURES_PATH) || !(await isSupabaseRunning())) {
+        return; // leave shouldSkip = true
+      }
+      shouldSkip = false;
       const { teamLead, member } = JSON.parse(readFileSync(FIXTURES_PATH, "utf-8"));
 
       teamLeadCtx = await request.newContext({ baseURL: "http://localhost:4321" });
@@ -302,12 +308,14 @@ test.describe(
     });
 
     test("member session is redirected to /dashboard", async () => {
+      test.skip(shouldSkip, "Requires local Supabase + fixtures (run npx supabase start first)");
       const resp = await memberCtx.get("/team-feed", { maxRedirects: 0 });
       expect(resp.status()).toBe(302);
       expect(resp.headers().location).toBe("/dashboard");
     });
 
     test("team_lead session reaches /team-feed (200)", async () => {
+      test.skip(shouldSkip, "Requires local Supabase + fixtures (run npx supabase start first)");
       const resp = await teamLeadCtx.get("/team-feed", { maxRedirects: 0 });
       expect(resp.status()).toBe(200);
     });
@@ -354,14 +362,15 @@ globalTeardown: "./e2e/global-teardown.ts",
 ### Phase 1: Vitest invite-token security tests
 
 #### Automated
-- [ ] 1.1 Write `src/__tests__/invite-token-security.test.ts` with `beforeAll`, `afterAll`, and 4 tests
-- [ ] 1.2 `npm test` exits 0 (4 tests pass or 1 skip line if Supabase not running)
-- [ ] 1.3 `npm run lint` exits 0
-- [ ] 1.4 `npm run build` exits 0
+- [x] 1.1 Write `src/__tests__/invite-token-security.test.ts` with `beforeAll`, `afterAll`, and 4 tests
+- [x] 1.2 `npm test` exits 0 (4 tests pass or 1 skip line if Supabase not running)
+- [x] 1.3 `npm run lint` exits 0
+- [x] 1.4 `npm run build` exits 0
 
 #### Manual
-- [ ] 1.5 Confirm all 4 tests show as green when `npx supabase start` is running
-- [ ] 1.6 Confirm 1 skip line (not a failure) when Supabase is stopped
+- [x] 1.5 Confirm all 4 tests show as green when `npx supabase start` is running
+- [x] 1.6 Confirm 1 skip line (not a failure) when Supabase is stopped
+- [x] 1.7 Confirm positive test "user-a workspace_member row exists" appears green in output
 
 ### Phase 2: Playwright globalSetup + role-gating spec
 
@@ -380,3 +389,4 @@ globalTeardown: "./e2e/global-teardown.ts",
 - [ ] 2.10 Confirm member session is rejected (302 /dashboard confirmed in output)
 - [ ] 2.11 Confirm team_lead session is accepted (200 confirmed in output)
 - [ ] 2.12 Confirm role-gating tests skip (not fail) when Supabase is stopped
+- [ ] 2.13 Confirm workspace + users are gone from Supabase Studio after teardown

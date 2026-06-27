@@ -1,7 +1,7 @@
 ---
 change_id: test-security-role-invite
 title: Test security role invite
-status: planned
+status: implementing
 created: 2026-06-27
 updated: 2026-06-27
 archived_at: null
